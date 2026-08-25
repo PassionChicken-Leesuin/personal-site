@@ -108,7 +108,7 @@ export const journey: Chapter[] = [
   },
   {
     period: "2026 —",
-    title: "KT · Genuine Energy System",
+    title: "KT P&M · Genuine Energy System",
     body:
       "데이터 분석 TF 연구원. 기지국 HVAC의 AI 냉방 제어를 현장에서 검증하고, 암묵지를 " +
       "구조화하는 에이전틱 AI와 다중 에이전트 토론 기반 기술 발굴 시스템, 특허 IPC–상표 " +
