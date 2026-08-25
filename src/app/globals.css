@@ -1,63 +1,40 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
-   디자인 토큰
-   VoltAgent/awesome-design-md 의 design-md/claude/DESIGN.md (MIT)
-   팔레트를 "구름과 나무" 컨셉에 맞춰 각색.
-     테라코타 = 나무껍질 / 청록 = 잎사귀 / 앰버 = 잎 사이 빛
+   디자인 토큰 — 제도(製圖) 톤
+
+   따뜻한 오프화이트 용지 위에 잉크 한 색. 색으로 강조하지 않는다.
+   위계는 굵기·자간·괘선으로만 만든다 — 도면이 그렇게 읽히기 때문이다.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --canvas: #e4eef7;
-  --surface-soft: #d5e6f3;
-  --surface-card: #ffffff;
-  --hairline: #c8dcea;
-  --hairline-soft: #d8e7f2;
+  --canvas: #f2f0ea;
+  --surface-soft: #ebe8e0;
+  --surface-card: #f7f6f2;
 
-  --ink: #0f1720;
-  --body: #33414d;
-  --muted: #445766;
+  /* 두 종류의 선. 실선은 구조를, 연선은 작도선을 그린다. */
+  --hairline: #d3cfc3;
+  --hairline-soft: #e2dfd5;
 
-  --bark: #b06a4e;
-  --bark-deep: #7d4530; /* 가장 진한 하늘 위 5.1:1 */
-  --leaf: #4f9e73;
-  --light: #e8a55a;
-
-  /* 구름 — 파란 하늘 위의 흰 구름.
-     아래층으로 갈수록 그늘진 쪽이라 살짝 푸르다. */
-  --sky-top: rgba(174, 209, 236, 0.75);
-  --ground: rgba(224, 212, 190, 0.42);
-
-  --mist-1: rgba(255, 255, 255, 0.92);
-  --mist-2: rgba(255, 255, 255, 0.7);
-  --mist-3: rgba(255, 255, 255, 0.5);
+  --ink: #1c1b17;
+  --body: #4a4740;
+  --muted: #6b6659;
 
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #0d1520;
-    --surface-soft: #131d2a;
-    --surface-card: #182333;
-    --hairline: #24303f;
-    --hairline-soft: #1d2836;
+    /* 청사진의 반전 — 검은 용지에 흰 잉크 */
+    --canvas: #141311;
+    --surface-soft: #1c1b18;
+    --surface-card: #201f1b;
 
-    --ink: #eef4f9;
-    --body: #cbd8e3;
-    --muted: #8fa3b5;
+    --hairline: #3a3831;
+    --hairline-soft: #292722;
 
-    --bark: #c9825f;
-    --bark-deep: #d99570;
-    --leaf: #6bbd91;
-    --light: #edb679;
-
-    /* 밤하늘의 구름 */
-    --sky-top: rgba(28, 46, 70, 0.7);
-    --ground: rgba(48, 42, 34, 0.45);
-
-    --mist-1: rgba(64, 86, 112, 0.6);
-    --mist-2: rgba(48, 66, 88, 0.45);
-    --mist-3: rgba(38, 56, 78, 0.5);
+    --ink: #f2f0e9;
+    --body: #c3bfb4;
+    --muted: #948e80;
 
     color-scheme: dark;
   }
@@ -72,48 +49,45 @@
   --color-ink: var(--ink);
   --color-body: var(--body);
   --color-muted: var(--muted);
-  --color-bark: var(--bark);
-  --color-bark-deep: var(--bark-deep);
-  --color-leaf: var(--leaf);
-  --color-light: var(--light);
 
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-jost);
   --font-sans: var(--font-inter);
 }
 
-/* ── 스크롤 구동 변수 (ScrollDriver 가 매 프레임 갱신) ──────── */
+/* ScrollDriver 가 매 프레임 갱신 — 상단 진행 괘선이 읽는다 */
 @property --scroll {
   syntax: "<number>";
   inherits: true;
   initial-value: 0;
 }
-@property --tree {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0;
-}
 
+/* ── 용지 ──────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
   min-height: 100%;
-  /* 화면 전체 폭 요소(3D 캔버스)가 가로 스크롤을 만들지 않도록 */
   overflow-x: clip;
-  /* 위는 하늘, 아래는 땅. 스크롤해 내려갈수록 지면에 가까워진다.
-     body 에 걸면 캔버스로 전파되면서 뷰포트 높이마다 반복된다. */
   background-color: var(--canvas);
-  background-image: linear-gradient(
-    to bottom,
-    var(--sky-top) 0%,
-    transparent 40%,
-    var(--ground) 100%
-  );
-  background-repeat: no-repeat;
+}
+
+/* 방안지. 눈에 띄면 실패다 — 있는 줄 모르고 봐야 종이처럼 읽힌다. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--hairline-soft) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline-soft) 1px, transparent 1px);
+  background-size: 96px 96px;
+  opacity: 0.5;
+  /* 가장자리로 갈수록 사라져 격자가 화면을 가두지 않게 한다 */
+  mask-image: radial-gradient(ellipse 120% 90% at 50% 45%, #000 30%, transparent 82%);
 }
 
 body {
   color: var(--body);
-  /* 한글은 웹폰트를 얹지 않는다 — 한글 웹폰트는 수백 KB라 이 정적 사이트의
-     이점을 깎는다. 시스템 스택으로 충분히 좋게 나온다. */
+  /* 한글 웹폰트는 얹지 않는다 — 수백 KB라 이 정적 사이트의 이점을 깎는다. */
   font-family:
     var(--font-inter),
     "Pretendard Variable",
@@ -129,20 +103,35 @@ body {
 }
 
 ::selection {
-  background: var(--leaf);
+  background: var(--ink);
   color: var(--canvas);
 }
 
 :focus-visible {
-  outline: 2px solid var(--bark-deep);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+  border-radius: 0; /* 도면에 둥근 모서리는 없다 */
+}
+
+/* ── 제도용 소문자 라벨 ────────────────────────────────────── */
+.label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .label {
+    font-size: 11px;
+  }
 }
 
 /* ── 스크롤 등장 ───────────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(14px);
   transition:
     opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -152,103 +141,155 @@ body {
   transform: none;
 }
 
-/* ── 안개층 ────────────────────────────────────────────────── */
-.mist-wrap {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden; /* 레이어가 컨테이너를 넘지 않도록 클립 */
-  pointer-events: none;
-}
-
-.mist {
-  position: absolute;
-  will-change: transform;
-  animation: drift var(--drift-dur, 90s) ease-in-out infinite alternate;
-}
-
-/* 드리프트(무한)와 스크롤 패럴랙스를 서로 다른 엘리먼트에서 합성한다.
-   한 엘리먼트에 둘 다 걸면 애니메이션이 transform 을 덮어쓴다. */
-.mist-inner {
-  width: 100%;
-  height: 100%;
-  transform: translate3d(0, calc(var(--scroll) * var(--parallax, -60px)), 0);
-}
-
-@keyframes drift {
-  from {
-    transform: translate3d(-5%, 0, 0);
-  }
-  to {
-    transform: translate3d(5%, 0, 0);
-  }
-}
-
 /* ── 3D 씬 ─────────────────────────────────────────────────── */
 .scene-layer {
-  /* 화면 전체에 고정. 화면을 전환해도 같은 섬이 이어진다. */
   position: fixed;
   inset: 0;
   z-index: 1;
 }
 .scene-layer canvas {
   display: block;
-  /* 세로 스크롤은 페이지에 넘긴다. 캔버스가 가로채면 모바일에서 갇힌다. */
   touch-action: pan-y;
 }
 
 /**
- * 글 쪽에 깔리는 스크림.
+ * 글 뒤에 깔리는 스크림.
  *
- * 3D 배경은 매 프레임 달라진다. 구름 하나가 지나가는 것만으로 다크모드에서
- * 링크 대비가 2.2:1 까지 떨어졌다. 배경을 통제할 수 없으면 글 뒤에 바탕을
- * 깔아야 한다.
+ * 선으로만 그린 배경이라 3D 가 원래도 옅지만, 선이 글자를 가로지르면
+ * 획과 구별이 안 된다. 글이 있는 쪽만 확실히 덮고 도형이 있는 쪽은 틔워둔다.
  */
 .scene-scrim {
   position: fixed;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  /* 홈, 좁은 화면 — 글이 아래에 있다 */
   background: linear-gradient(
     to top,
     color-mix(in oklab, var(--canvas) 92%, transparent) 0%,
-    color-mix(in oklab, var(--canvas) 74%, transparent) 42%,
-    transparent 72%
+    color-mix(in oklab, var(--canvas) 72%, transparent) 44%,
+    transparent 74%
   );
 }
 
 @media (min-width: 640px) {
   .scene-scrim[data-view="home"] {
-    /* 홈, 넓은 화면 — 글이 왼쪽 */
     background: linear-gradient(
       to right,
       color-mix(in oklab, var(--canvas) 90%, transparent) 0%,
-      color-mix(in oklab, var(--canvas) 72%, transparent) 36%,
-      transparent 64%
+      color-mix(in oklab, var(--canvas) 70%, transparent) 38%,
+      transparent 66%
     );
   }
 }
 
-/* 섹션 화면 — 긴 글 위에서는 배경이 조용해야 한다.
-   다만 고르게 덮으면 구석의 섬까지 지워진다. 글이 있는 쪽은 확실히 덮고
-   섬이 있는 오른쪽 끝은 숨통을 틔워준다. */
 .scene-scrim:not([data-view="home"]) {
-  background: color-mix(in oklab, var(--canvas) 84%, transparent);
+  background: color-mix(in oklab, var(--canvas) 86%, transparent);
 }
 
 @media (min-width: 640px) {
   .scene-scrim:not([data-view="home"]) {
     background: linear-gradient(
       to right,
-      color-mix(in oklab, var(--canvas) 87%, transparent) 0%,
-      color-mix(in oklab, var(--canvas) 87%, transparent) 74%,
-      color-mix(in oklab, var(--canvas) 38%, transparent) 100%
+      color-mix(in oklab, var(--canvas) 88%, transparent) 0%,
+      color-mix(in oklab, var(--canvas) 88%, transparent) 72%,
+      color-mix(in oklab, var(--canvas) 40%, transparent) 100%
     );
   }
 }
 
-/* 화면 전환 — 새 내용이 조용히 올라온다 */
+/* 게이트에서는 도형이 글자 뒤 정중앙에 있다. 고르게 아주 옅게만 덮는다.
+   좁은 화면은 도형과 글자가 같은 폭을 두고 다투므로 더 눌러 준다. */
+.scene-scrim[data-view="hello"] {
+  background: color-mix(in oklab, var(--canvas) 62%, transparent);
+}
+
+@media (min-width: 768px) {
+  .scene-scrim[data-view="hello"] {
+    background: color-mix(in oklab, var(--canvas) 42%, transparent);
+  }
+}
+
+/* ── HELLO 게이트 ──────────────────────────────────────────── */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  animation: gate-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 나갈 때 — 글자가 옅어지며 살짝 더 벌어진다 */
+.gate[data-leaving="true"] {
+  animation: gate-out 620ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  pointer-events: none;
+}
+
+@keyframes gate-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gate-out {
+  from {
+    opacity: 1;
+    letter-spacing: var(--gate-track);
+  }
+  to {
+    opacity: 0;
+    letter-spacing: calc(var(--gate-track) * 2.1);
+  }
+}
+
+.gate-word {
+  --gate-track: 0.42em;
+  display: block;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 11vw, 8.5rem);
+  line-height: 1;
+  color: var(--ink);
+  /* 마지막 글자 뒤에도 자간이 붙는다 — 그만큼 왼쪽으로 당겨 광학 중심을 맞춘다 */
+  letter-spacing: var(--gate-track);
+  text-indent: var(--gate-track);
+  transition:
+    letter-spacing 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    text-indent 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 500ms ease;
+}
+
+.gate-word:hover,
+.gate-word:focus-visible {
+  --gate-track: 0.56em;
+}
+
+.gate-hint {
+  margin-top: 3.5rem;
+  text-align: center;
+  opacity: 0;
+  animation: hint-in 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1100ms both;
+}
+
+@keyframes hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 0.85;
+    transform: none;
+  }
+}
+
+/* ── 화면 전환 ─────────────────────────────────────────────── */
 @keyframes view-in {
   from {
     opacity: 0;
@@ -260,8 +301,7 @@ body {
   }
 }
 .view-enter {
-  animation: view-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  /* 고정된 상단 바를 피한다 */
+  animation: view-in 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
   padding-top: 7rem;
   /* main 은 클릭을 넘긴다. 실제 내용이 있는 여기서 다시 켠다. */
   pointer-events: auto;
@@ -272,10 +312,12 @@ body {
   flex-direction: column;
   justify-content: center;
   padding-top: 5rem;
-  /* 홈에서는 글 상자가 캔버스를 덮어 노드 클릭을 가로챈다.
-     이 화면의 글에는 누를 것이 없으므로 통째로 클릭을 넘긴다.
-     상단 바는 별도 레이어라 그대로 동작한다. */
+  /* 홈의 글에는 누를 것이 없다. 통째로 넘겨 뒤의 노드를 누를 수 있게 한다. */
   pointer-events: none;
+}
+.view-enter[data-home="true"] a,
+.view-enter[data-home="true"] button {
+  pointer-events: auto;
 }
 
 @media (min-width: 640px) {
@@ -284,68 +326,51 @@ body {
   }
 }
 
-/* 공전 노드에 붙는 라벨. 접근성 경로가 아니라 시각적 표시다. */
+/* ── 화면 가장자리 괘선 ────────────────────────────────────── */
+.edge-rule {
+  position: fixed;
+  width: 1px;
+  background: var(--hairline);
+  z-index: 5;
+  pointer-events: none;
+  transform-origin: top;
+  animation: rule-draw 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ── 공전 노드 라벨 — 도면의 지시선 끝에 붙는 표기 ─────────── */
 .node-label {
   display: inline-block;
   white-space: nowrap;
-  transform: translateY(-1.6em);
-  font-size: 11px;
+  transform: translateY(-1.7em);
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink);
-  background: color-mix(in oklab, var(--canvas) 78%, transparent);
+  background: color-mix(in oklab, var(--canvas) 82%, transparent);
   border: 1px solid var(--hairline);
-  border-radius: 9999px;
-  padding: 4px 10px;
-  opacity: 0.75;
+  padding: 4px 9px;
+  opacity: 0.72;
   transition:
     opacity 250ms ease,
-    transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    letter-spacing 250ms ease;
   user-select: none;
 }
 .node-label[data-hovered="true"] {
   opacity: 1;
-  transform: translateY(-1.9em);
-  border-color: var(--bark);
-}
-
-/* ── 나무 ──────────────────────────────────────────────────── */
-/* 나무가 설 좌측 여백. 나무의 모든 좌표가 이 값에 비례하므로
-   여기만 줄이면 좁은 화면에서 나무 전체가 같은 비율로 작아진다. */
-:root {
-  --spine: 40px;
-}
-@media (min-width: 640px) {
-  :root {
-    --spine: 72px;
-  }
-}
-
-/* 줄기 — 위에서부터 드러난다. 채운 도형이라 늘어나도 굵기가 뭉개지지 않는다.
-   가지보다 앞서 도달하도록 --tree 보다 빠르게 완성된다. */
-.trunk {
-  clip-path: inset(0 0 calc((1 - clamp(0, var(--tree) / 0.6, 1)) * 100%) 0);
-}
-
-.branch-grow {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1100ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--grow-delay, 0ms);
-}
-[data-visible="true"] .branch-grow {
-  stroke-dashoffset: 0;
-}
-
-.branch {
-  stroke-dasharray: 1;
-  /* --at: 그려지기 시작하는 시점, --span: 그려지는 데 걸리는 구간 */
-  stroke-dashoffset: clamp(
-    0,
-    calc(1 - (var(--tree) - var(--at, 0)) / var(--span, 0.3)),
-    1
-  );
+  transform: translateY(-2em);
+  letter-spacing: 0.3em;
+  border-color: var(--ink);
 }
 
 /* ── 접근성: 동작 줄이기 ───────────────────────────────────── */
@@ -358,23 +383,18 @@ body {
     transform: none;
     transition: none;
   }
-  /* 나무는 완성된 상태로 즉시 보인다 */
-  .branch,
-  .branch-grow {
-    stroke-dashoffset: 0;
+  .view-enter,
+  .gate,
+  .gate-hint,
+  .edge-rule {
+    animation: none;
+    opacity: 1;
+  }
+  .gate[data-leaving="true"] {
+    opacity: 0;
+  }
+  .gate-word {
     transition: none;
-  }
-  .trunk {
-    clip-path: none;
-  }
-  .mist {
-    animation: none;
-  }
-  .view-enter {
-    animation: none;
-  }
-  .mist-inner {
-    transform: none;
   }
   *,
   *::before,

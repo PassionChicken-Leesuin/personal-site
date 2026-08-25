@@ -9,55 +9,46 @@ import {
   PerformanceMonitor,
 } from "@react-three/drei";
 import * as THREE from "three";
-import Island from "./Island";
-import Tree3D from "./Tree3D";
+import Structure from "./Structure";
 import OrbitNodes, { type SectionNode } from "./OrbitNodes";
-import SkyClouds from "./SkyClouds";
 import { useThemeColors } from "./useThemeColors";
-import type { View } from "../views";
+import type { Stage, View } from "../views";
 
 // 기본 카메라 배치. 노드로 날아갔다가 여기로 되돌아온다.
-const HOME_POS: [number, number, number] = [0, 2.6, 11];
+const HOME_POS: [number, number, number] = [0, 2.2, 11];
 const HOME_TARGET: [number, number, number] = [0, 0.2, 0];
 
 type Place = { x: number; y: number; scale: number };
 
 /**
- * 섬이 놓이는 자리.
+ * 작도가 놓이는 자리.
  *
- * 홈에서는 크게 자리를 차지하고, 섹션을 볼 때는 작아져 구석으로 물러난다.
- * 좁은 화면은 좌우로 나눌 폭이 없어 위아래로 나눈다.
+ * 게이트에서는 화면 한가운데에서 글자 뒤를 채우고, 홈으로 들어오면 옆으로
+ * 비켜서고, 섹션을 읽을 때는 구석까지 물러난다. 좁은 화면은 좌우로 나눌 폭이
+ * 없어 위아래로 나눈다.
  */
-function placement(narrow: boolean, view: View): Place {
-  if (view === "home") {
+function placement(narrow: boolean, stage: Stage): Place {
+  if (stage === "hello") {
     return narrow
-      ? { x: 0, y: 2.45, scale: 0.46 }
-      : { x: 3.3, y: 0, scale: 0.78 };
+      ? { x: 0, y: 0.2, scale: 0.48 }
+      : { x: 0, y: 0.2, scale: 0.95 };
+  }
+  if (stage === "home") {
+    // 도형이 흩어져 있어 폭을 넓게 쓴다. 본문 오른쪽 끝보다 더 밀어야
+    // 선이 문단 위를 가로지르지 않는다.
+    return narrow
+      ? { x: 0, y: 2.6, scale: 0.42 }
+      : { x: 4.0, y: 0, scale: 0.74 };
   }
   return narrow
     ? { x: 1.9, y: -3.5, scale: 0.24 }
     : { x: 5.4, y: -2.8, scale: 0.32 };
 }
 
-/** 섬 전체를 아주 느리게 돌린다 — 한 바퀴에 약 70초. */
-function SlowSpin({
-  children,
-  animate,
-}: {
-  children: React.ReactNode;
-  animate: boolean;
-}) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame((_, delta) => {
-    if (ref.current && animate) ref.current.rotation.y += delta * 0.09;
-  });
-  return <group ref={ref}>{children}</group>;
-}
-
 /**
  * 목표 자리로 부드럽게 옮겨간다.
  *
- * 화면을 전환할 때 섬이 툭 순간이동하면 같은 섬이라는 느낌이 끊긴다.
+ * 화면을 전환할 때 도형이 툭 순간이동하면 같은 도형이라는 느낌이 끊긴다.
  * 프레임마다 목표를 향해 일정 비율로 다가가되, 그 비율을 delta 기반으로
  * 계산해 프레임률이 달라져도 속도가 같게 한다.
  */
@@ -93,12 +84,12 @@ function Placed({
 export default function Scene({
   onNavigate,
   active,
-  view,
+  stage,
 }: {
   onNavigate: (id: View) => void;
   /** 탭이 숨겨지면 false — 렌더 루프를 멈춘다. */
   active: boolean;
-  view: View;
+  stage: Stage;
 }) {
   const colors = useThemeColors();
   const controls = useRef<React.ComponentRef<typeof CameraControls>>(null);
@@ -160,8 +151,9 @@ export default function Scene({
     [animate, onNavigate],
   );
 
-  const place = placement(narrow, view);
-  const home = view === "home";
+  const place = placement(narrow, stage);
+  const gate = stage === "hello";
+  const home = stage === "home";
 
   return (
     <Canvas
@@ -179,36 +171,29 @@ export default function Scene({
       />
       <AdaptiveDpr pixelated />
 
-      {/* 부드럽게. 직사광을 세게 주면 저폴리 면의 대비가 과장돼
-          사이트의 차분한 톤과 따로 논다. */}
-      <hemisphereLight args={[colors.sky, colors.bark, 1.4]} />
-      <ambientLight intensity={0.75} />
-      <directionalLight position={[5, 8, 4]} intensity={0.75} />
-      <directionalLight position={[-6, 2, -4]} intensity={0.35} color={colors.sky} />
-      {/* 멀리 있는 것일수록 하늘색에 잠기게 — 씬이 배경에 앉는다 */}
-      <fog attach="fog" args={[colors.canvas, 14, 34]} />
+      {/* 조명이 하나도 없다 — 선으로만 그리므로 전부 unlit 이다.
+          멀리 있는 선일수록 용지색에 잠겨, 겹친 선이 뭉치지 않는다. */}
+      <fog attach="fog" args={[colors.canvas, 12, 30]} />
 
       <Placed place={place} animate={animate}>
         <Float
-          speed={animate ? 1.1 : 0}
-          rotationIntensity={animate ? 0.12 : 0}
-          floatIntensity={animate ? 0.5 : 0}
+          speed={animate ? 1 : 0}
+          rotationIntensity={animate ? 0.1 : 0}
+          floatIntensity={animate ? 0.45 : 0}
         >
-          <SlowSpin animate={animate}>
-            <Island colors={colors} detail={detail} />
-            <Tree3D colors={colors} detail={detail} animate={animate} />
-          </SlowSpin>
+          <Structure colors={colors} animate={animate} detail={detail} />
         </Float>
 
-        <OrbitNodes
-          colors={colors}
-          animate={animate}
-          showLabels={home}
-          onSelect={handleSelect}
-        />
+        {/* 게이트에서는 누를 것이 HELLO 하나뿐이어야 한다 */}
+        {!gate && (
+          <OrbitNodes
+            colors={colors}
+            animate={animate}
+            showLabels={home && !narrow}
+            onSelect={handleSelect}
+          />
+        )}
       </Placed>
-
-      <SkyClouds colors={colors} detail={detail} animate={animate} />
 
       <CameraControls
         ref={controls}

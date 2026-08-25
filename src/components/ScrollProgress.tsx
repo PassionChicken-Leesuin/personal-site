@@ -1,5 +1,5 @@
 /**
- * 상단 진행 바. 서버 컴포넌트 — 자체 스크롤 리스너가 없다.
+ * 상단 진행 괘선. 서버 컴포넌트 — 자체 스크롤 리스너가 없다.
  * ScrollDriver 가 :root 에 쓰는 --scroll 을 CSS 가 직접 읽어 scaleX 로 쓴다.
  */
 export default function ScrollProgress() {
@@ -9,7 +9,7 @@ export default function ScrollProgress() {
         className="h-full origin-left"
         style={{
           transform: "scaleX(var(--scroll))",
-          background: "var(--bark)",
+          background: "var(--ink)",
         }}
       />
     </div>

@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Jost } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content";
 import ScrollDriver from "@/components/ScrollDriver";
-import MistLayers from "@/components/MistLayers";
 
-// Claude DESIGN.md 의 Copernicus / StyreneB 는 유료 서체라 대체한다.
-// Fraunces: SOFT·WONK 축이 있어 유기적인 인상을 만든다 (구름·나무 컨셉)
-// Inter:    원본 DESIGN.md 가 스스로 명시한 fallback
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Jost: 기하학적 그로테스크. 원이 정원(正圓)에 가까워 제도 도구로 그은 듯한
+//       인상을 준다 — 이 사이트가 빌려온 도면 언어와 같은 계열이다.
+// Inter: 본문. 작은 크기에서 흐트러지지 않는다.
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
-  axes: ["SOFT", "WONK"],
   display: "swap",
 });
 
@@ -43,11 +41,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ko"
-      className={`${fraunces.variable} ${inter.variable} min-h-full antialiased`}
+      className={`${jost.variable} ${inter.variable} min-h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ScrollDriver />
-        <MistLayers />
         {children}
       </body>
     </html>

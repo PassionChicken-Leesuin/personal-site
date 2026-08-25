@@ -1,51 +1,45 @@
 import Reveal from "@/components/Reveal";
-import { TreeSpine, Branch, TreeRoots } from "@/components/Tree";
 import { journey } from "@/content";
-import { SectionLabel } from "./shared";
+import { SectionHead } from "./shared";
 
 export default function Journey() {
   return (
-    // id="journey" — ScrollDriver 가 이 섹션의 진행도로 --tree 를 계산한다
     <section id="journey">
       <Reveal>
-        <SectionLabel>Journey</SectionLabel>
+        <SectionHead index="02 / 03">Journey</SectionHead>
       </Reveal>
 
-      {/* 나무가 설 자리만큼 왼쪽을 비운다. 가지는 각 챕터 안에 있으므로
-          본문 길이가 달라져도 정렬이 저절로 맞는다. */}
-      <div
-        className="relative mt-12 sm:mt-16"
-        style={{ paddingLeft: `var(--spine, 0px)` }}
-      >
-        <TreeSpine />
+      {/* 세로 괘선 하나가 전 구간을 관통하고, 각 항목이 거기에 눈금으로 걸린다.
+          선은 목록 안쪽에 두어 본문 길이가 달라져도 저절로 같이 늘어난다. */}
+      <ol className="relative mt-12 space-y-14 pl-8 sm:pl-12">
+        <span
+          className="absolute inset-y-0 left-0 w-px bg-hairline"
+          aria-hidden="true"
+        />
 
-        <ol className="space-y-16">
-          {journey.map((chapter, i) => (
-            <li key={chapter.period + i} className="relative">
-              {/* Branch 는 Reveal 안에 있어야 data-visible 을 받는다 */}
-              <Reveal delay={i * 60}>
-                <Branch index={i} />
-                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">
-                  {chapter.period}
-                </p>
-                <h2 className="mt-2 font-display text-xl font-normal tracking-tight text-ink sm:text-2xl">
-                  {chapter.title}
-                </h2>
-                <p className="mt-3 max-w-xl text-sm leading-[1.75] sm:text-base">
-                  {chapter.body}
-                </p>
-              </Reveal>
-            </li>
-          ))}
+        {journey.map((chapter, i) => (
+          <li key={chapter.period + i} className="relative">
+            <Reveal delay={i * 60}>
+              {/* 눈금 — 괘선에서 뻗어 나온 짧은 선과 그 끝의 네모 */}
+              <span
+                className="absolute -left-8 top-[0.55rem] flex items-center sm:-left-12"
+                aria-hidden="true"
+              >
+                <span className="h-px w-5 bg-hairline sm:w-9" />
+                <span className="h-[5px] w-[5px] -translate-x-[2.5px] border border-ink bg-canvas" />
+              </span>
 
-          {/* 뿌리 — 목록 끝. 여기까지 내려와야 그려진다. */}
-          <li className="relative h-14" aria-hidden="true">
-            <Reveal>
-              <TreeRoots />
+              <p className="label">{chapter.period}</p>
+              <h2 className="mt-2.5 font-display text-xl font-light tracking-[0.01em] text-ink sm:text-2xl">
+                {chapter.title}
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-[1.85] text-body">
+                {chapter.body}
+              </p>
             </Reveal>
           </li>
-        </ol>
-      </div>
+        ))}
+      </ol>
     </section>
   );
 }

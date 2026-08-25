@@ -1,29 +1,31 @@
 import Reveal from "@/components/Reveal";
 import Magnetic from "@/components/Magnetic";
 import { works } from "@/content";
-import { Leaf, SectionLabel } from "./shared";
+import { Outbound, SectionHead } from "./shared";
 
 export default function Work() {
   return (
     <section id="work">
       <Reveal>
-        <SectionLabel>Work</SectionLabel>
+        <SectionHead index="01 / 03">Work</SectionHead>
       </Reveal>
 
-      <ul className="mt-12">
+      <ul className="mt-10">
         {works.map((work, i) => {
           const inner = (
-            <div className="flex flex-col gap-2 border-t border-hairline py-8 transition-colors duration-300 group-hover:border-leaf sm:flex-row sm:items-baseline sm:gap-8">
-              <div className="flex w-28 shrink-0 flex-col gap-1 text-xs uppercase tracking-[0.12em] text-muted">
-                <span>{work.year}</span>
-                <span>{work.kind}</span>
+            <div className="flex flex-col gap-3 border-t border-hairline-soft py-8 transition-colors duration-300 group-hover:border-ink sm:flex-row sm:gap-10">
+              {/* 왼쪽 칸은 도면의 치수 기입란 — 폭을 고정해 행끼리 줄이 맞는다 */}
+              <div className="flex w-24 shrink-0 flex-col gap-1.5 pt-1">
+                <span className="label">{work.year}</span>
+                <span className="label">{work.kind}</span>
               </div>
+
               <div className="min-w-0">
-                <h2 className="flex items-start gap-2 font-display text-xl font-normal leading-snug tracking-tight text-ink transition-colors duration-300 group-hover:text-bark-deep sm:text-2xl">
+                <h2 className="flex items-start gap-1.5 font-display text-xl font-light leading-snug tracking-[0.01em] text-ink sm:text-2xl">
                   <span>{work.title}</span>
-                  {work.href && <Leaf />}
+                  {work.href && <Outbound />}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed sm:text-base">
+                <p className="mt-3 text-sm leading-[1.8] text-body">
                   {work.description}
                 </p>
               </div>
