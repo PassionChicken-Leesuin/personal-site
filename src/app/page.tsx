@@ -1,8 +1,9 @@
 import Reveal from "@/components/Reveal";
+import Hero3D from "@/components/Hero3D";
 import ScrollProgress from "@/components/ScrollProgress";
 import { TreeSpine, Branch, TreeRoots } from "@/components/Tree";
 import Magnetic from "@/components/Magnetic";
-import { site, works, journey, links, skills } from "@/content";
+import { site, works, journey, links } from "@/content";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -39,50 +40,7 @@ export default function Home() {
 
       {/* z-10 — 안개층(z-0) 위에 놓인다 */}
       <main className="relative z-10 mx-auto w-full max-w-3xl px-6 sm:px-8">
-        {/* ── Intro ───────────────────────────────────────── */}
-        <section className="flex min-h-svh flex-col justify-center py-24">
-          <Reveal>
-            <SectionLabel>{site.location}</SectionLabel>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <h1 className="mt-6 font-display text-6xl font-normal leading-[1.02] tracking-tight text-ink sm:text-8xl">
-              {site.name}
-            </h1>
-          </Reveal>
-
-          <Reveal delay={140}>
-            <p className="mt-4 font-display text-xl italic text-bark-deep sm:text-2xl">
-              {site.nameKo} · {site.role}
-            </p>
-          </Reveal>
-
-          <Reveal delay={220}>
-            <p className="mt-10 max-w-xl text-base leading-[1.75] sm:text-lg">
-              {site.tagline}
-            </p>
-          </Reveal>
-
-          <Reveal delay={280}>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-              {skills.map((skill) => (
-                <li
-                  key={skill}
-                  className="text-xs font-medium uppercase tracking-[0.14em] text-muted"
-                >
-                  {skill}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={340}>
-            <div className="mt-16 flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-muted">
-              <span>scroll</span>
-              <span className="h-px w-12 bg-hairline" />
-            </div>
-          </Reveal>
-        </section>
+        <Hero3D />
 
         {/* ── Work ────────────────────────────────────────── */}
         <section id="work" className="border-t border-hairline py-24 sm:py-32">

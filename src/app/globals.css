@@ -96,6 +96,8 @@
 html {
   scroll-behavior: smooth;
   min-height: 100%;
+  /* 화면 전체 폭 요소(3D 캔버스)가 가로 스크롤을 만들지 않도록 */
+  overflow-x: clip;
   /* 위는 하늘, 아래는 땅. 스크롤해 내려갈수록 지면에 가까워진다.
      body 에 걸면 캔버스로 전파되면서 뷰포트 높이마다 반복된다. */
   background-color: var(--canvas);
@@ -180,6 +182,87 @@ body {
   to {
     transform: translate3d(5%, 0, 0);
   }
+}
+
+/* ── 3D 히어로 ─────────────────────────────────────────────── */
+.hero-canvas {
+  /* 히어로는 max-w-3xl 컨테이너 안에 있다. 캔버스만 화면 전체 폭으로 빼낸다. */
+  position: absolute;
+  top: 0;
+  left: calc(-50vw + 50%);
+  width: 100vw;
+  /* 높이는 섹션이 아니라 뷰포트에 맞춘다. 본문이 길어져 섹션이 한 화면을
+     넘어가면 캔버스도 같이 늘어나고, 그만큼 카메라 프레임이 어긋나
+     첫 화면에서 섬이 잘린다. */
+  height: 100svh;
+  z-index: 0;
+}
+.hero-canvas canvas {
+  display: block;
+  /* 세로 스크롤은 페이지에 넘긴다. 캔버스가 가로채면 모바일에서 갇힌다. */
+  touch-action: pan-y;
+}
+
+/**
+ * 글 쪽에 깔리는 스크림.
+ *
+ * 3D 배경은 매 프레임 달라진다. 구름 하나가 지나가는 것만으로 다크모드에서
+ * 링크 대비가 2.2:1 까지 떨어졌다. 배경을 통제할 수 없으면 글 뒤에 바탕을
+ * 깔아야 한다. 캔버스 색이 글 쪽에서 진하고 섬 쪽으로 갈수록 사라진다.
+ */
+.hero-scrim {
+  position: absolute;
+  top: 0;
+  left: calc(-50vw + 50%);
+  width: 100vw;
+  height: 100svh;
+  z-index: 1;
+  pointer-events: none;
+  /* 좁은 화면은 글이 아래에 있다 */
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--canvas) 92%, transparent) 0%,
+    color-mix(in oklab, var(--canvas) 74%, transparent) 42%,
+    transparent 72%
+  );
+}
+
+@media (min-width: 640px) {
+  .hero-scrim {
+    /* 넓은 화면은 글이 왼쪽 */
+    background: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--canvas) 90%, transparent) 0%,
+      color-mix(in oklab, var(--canvas) 72%, transparent) 36%,
+      transparent 64%
+    );
+  }
+}
+
+/* 공전 노드에 붙는 라벨. 접근성 경로가 아니라 시각적 표시다. */
+.node-label {
+  display: inline-block;
+  white-space: nowrap;
+  transform: translateY(-1.6em);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: color-mix(in oklab, var(--canvas) 78%, transparent);
+  border: 1px solid var(--hairline);
+  border-radius: 9999px;
+  padding: 4px 10px;
+  opacity: 0.75;
+  transition:
+    opacity 250ms ease,
+    transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+}
+.node-label[data-hovered="true"] {
+  opacity: 1;
+  transform: translateY(-1.9em);
+  border-color: var(--bark);
 }
 
 /* ── 나무 ──────────────────────────────────────────────────── */
