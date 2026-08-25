@@ -17,7 +17,14 @@ export type SectionNode = {
 };
 
 export const NODES: SectionNode[] = [
-  { id: "work", label: "Work", radius: 2.75, height: 1.85, speed: 0.16, phase: 0 },
+  {
+    id: "work",
+    label: "Work",
+    radius: 2.75,
+    height: 1.85,
+    speed: 0.16,
+    phase: 0,
+  },
   {
     id: "awards",
     label: "Awards",
@@ -121,7 +128,7 @@ function Node({
           <lineBasicMaterial
             color={colors.ink}
             transparent
-            opacity={hovered ? 0.95 : 0.55}
+            opacity={hovered ? 1 : 0.72}
             depthWrite={false}
           />
         </lineSegments>

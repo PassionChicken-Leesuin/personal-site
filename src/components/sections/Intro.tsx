@@ -1,5 +1,5 @@
 import Reveal from "@/components/Reveal";
-import { site, skills } from "@/content";
+import { about, site, skills } from "@/content";
 
 export default function Intro() {
   return (
@@ -25,13 +25,24 @@ export default function Intro() {
         </p>
       </Reveal>
 
+      {/* 소개는 두 문단이다. 첫 문단이 지금 하는 일, 둘째가 곁가지 —
+          같은 크기로 나란히 두면 어느 쪽이 본론인지 알 수 없다.
+          폭은 max-w-md 를 넘기지 않는다. 더 넓히면 오른쪽 작도와 겹친다. */}
       <Reveal delay={220}>
-        <p className="mt-10 max-w-md text-sm leading-[1.85] text-body">
-          {site.tagline}
+        <p className="mt-10 max-w-md text-[0.95rem] leading-[1.85] text-body">
+          {about[0]}
         </p>
       </Reveal>
 
-      <Reveal delay={280}>
+      {about[1] && (
+        <Reveal delay={280}>
+          <p className="mt-5 max-w-md text-sm leading-[1.85] text-muted">
+            {about[1]}
+          </p>
+        </Reveal>
+      )}
+
+      <Reveal delay={340}>
         <ul className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2">
           {skills.map((s, i) => (
             <li key={s} className="flex items-center gap-4">

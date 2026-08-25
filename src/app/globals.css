@@ -387,7 +387,9 @@ body {
   background: color-mix(in oklab, var(--canvas) 82%, transparent);
   border: 1px solid var(--hairline);
   padding: 4px 9px;
-  opacity: 0.72;
+  /* 평소에는 감춘다. 여섯 개가 상시로 떠 있으면 서로 겹치는 순간이 반드시
+     오고, 그 순간이 고장처럼 보인다. 이름은 상단 상자에 이미 다 있다. */
+  opacity: 0;
   transition:
     opacity 250ms ease,
     transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
