@@ -1,6 +1,6 @@
 import Reveal from "@/components/Reveal";
 import ScrollProgress from "@/components/ScrollProgress";
-import { site, works, journey, links } from "@/content";
+import { site, works, journey, links, skills } from "@/content";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -38,6 +38,19 @@ export default function Home() {
             <p className="mt-10 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               {site.tagline}
             </p>
+          </Reveal>
+
+          <Reveal delay={280}>
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+              {skills.map((skill) => (
+                <li
+                  key={skill}
+                  className="font-display text-xs uppercase tracking-[0.18em] text-muted"
+                >
+                  {skill}
+                </li>
+              ))}
+            </ul>
           </Reveal>
 
           <Reveal delay={320}>
