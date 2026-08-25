@@ -442,20 +442,33 @@ body {
   letter-spacing: 0.14em;
   color: var(--ink);
   user-select: none;
-  /* 궤도가 카메라 뒤로 돌아갈 때 툭 끊기지 않도록 */
-  transition: opacity 500ms ease;
+  /* 늘 떠 있는 것들이라 한 톤 눌러 둔다. 지면의 주인은 글이다. */
+  opacity: 0.9;
 }
 
 /* 로고는 잉크 한 색 실루엣으로 미리 변환해 둔 것이다(logos-source 가 원본).
    다크모드에서는 뒤집어 흰 실루엣이 된다. */
 .wordmark-logo {
   display: block;
-  height: 38px;
+  /* 여백이 좁은 창에서는 로고도 작아져야 본문을 침범하지 않는다 */
+  height: 28px;
   width: auto;
   /* Tailwind preflight 의 img{max-width:100%} 를 무른다.
      drei 의 Html 은 폭이 0 인 절대배치 div 안에 넣어 주므로, 100% 가 0 으로
      풀려 이미지 폭이 0 이 된다 — 높이만 잡히고 화면에는 아무것도 안 나온다. */
   max-width: none;
+}
+
+@media (min-width: 1280px) {
+  .wordmark-logo {
+    height: 33px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .wordmark-logo {
+    height: 38px;
+  }
 }
 
 /**
