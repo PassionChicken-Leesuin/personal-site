@@ -184,20 +184,14 @@ body {
   }
 }
 
-/* ── 3D 히어로 ─────────────────────────────────────────────── */
-.hero-canvas {
-  /* 히어로는 max-w-3xl 컨테이너 안에 있다. 캔버스만 화면 전체 폭으로 빼낸다. */
-  position: absolute;
-  top: 0;
-  left: calc(-50vw + 50%);
-  width: 100vw;
-  /* 높이는 섹션이 아니라 뷰포트에 맞춘다. 본문이 길어져 섹션이 한 화면을
-     넘어가면 캔버스도 같이 늘어나고, 그만큼 카메라 프레임이 어긋나
-     첫 화면에서 섬이 잘린다. */
-  height: 100svh;
-  z-index: 0;
+/* ── 3D 씬 ─────────────────────────────────────────────────── */
+.scene-layer {
+  /* 화면 전체에 고정. 화면을 전환해도 같은 섬이 이어진다. */
+  position: fixed;
+  inset: 0;
+  z-index: 1;
 }
-.hero-canvas canvas {
+.scene-layer canvas {
   display: block;
   /* 세로 스크롤은 페이지에 넘긴다. 캔버스가 가로채면 모바일에서 갇힌다. */
   touch-action: pan-y;
@@ -208,17 +202,14 @@ body {
  *
  * 3D 배경은 매 프레임 달라진다. 구름 하나가 지나가는 것만으로 다크모드에서
  * 링크 대비가 2.2:1 까지 떨어졌다. 배경을 통제할 수 없으면 글 뒤에 바탕을
- * 깔아야 한다. 캔버스 색이 글 쪽에서 진하고 섬 쪽으로 갈수록 사라진다.
+ * 깔아야 한다.
  */
-.hero-scrim {
-  position: absolute;
-  top: 0;
-  left: calc(-50vw + 50%);
-  width: 100vw;
-  height: 100svh;
-  z-index: 1;
+.scene-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
   pointer-events: none;
-  /* 좁은 화면은 글이 아래에 있다 */
+  /* 홈, 좁은 화면 — 글이 아래에 있다 */
   background: linear-gradient(
     to top,
     color-mix(in oklab, var(--canvas) 92%, transparent) 0%,
@@ -228,14 +219,68 @@ body {
 }
 
 @media (min-width: 640px) {
-  .hero-scrim {
-    /* 넓은 화면은 글이 왼쪽 */
+  .scene-scrim[data-view="home"] {
+    /* 홈, 넓은 화면 — 글이 왼쪽 */
     background: linear-gradient(
       to right,
       color-mix(in oklab, var(--canvas) 90%, transparent) 0%,
       color-mix(in oklab, var(--canvas) 72%, transparent) 36%,
       transparent 64%
     );
+  }
+}
+
+/* 섹션 화면 — 긴 글 위에서는 배경이 조용해야 한다.
+   다만 고르게 덮으면 구석의 섬까지 지워진다. 글이 있는 쪽은 확실히 덮고
+   섬이 있는 오른쪽 끝은 숨통을 틔워준다. */
+.scene-scrim:not([data-view="home"]) {
+  background: color-mix(in oklab, var(--canvas) 84%, transparent);
+}
+
+@media (min-width: 640px) {
+  .scene-scrim:not([data-view="home"]) {
+    background: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--canvas) 87%, transparent) 0%,
+      color-mix(in oklab, var(--canvas) 87%, transparent) 74%,
+      color-mix(in oklab, var(--canvas) 38%, transparent) 100%
+    );
+  }
+}
+
+/* 화면 전환 — 새 내용이 조용히 올라온다 */
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.view-enter {
+  animation: view-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* 고정된 상단 바를 피한다 */
+  padding-top: 7rem;
+  /* main 은 클릭을 넘긴다. 실제 내용이 있는 여기서 다시 켠다. */
+  pointer-events: auto;
+}
+.view-enter[data-home="true"] {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 5rem;
+  /* 홈에서는 글 상자가 캔버스를 덮어 노드 클릭을 가로챈다.
+     이 화면의 글에는 누를 것이 없으므로 통째로 클릭을 넘긴다.
+     상단 바는 별도 레이어라 그대로 동작한다. */
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .view-enter {
+    padding-top: 8rem;
   }
 }
 
@@ -323,6 +368,9 @@ body {
     clip-path: none;
   }
   .mist {
+    animation: none;
+  }
+  .view-enter {
     animation: none;
   }
   .mist-inner {

@@ -14,23 +14,30 @@ import Tree3D from "./Tree3D";
 import OrbitNodes, { type SectionNode } from "./OrbitNodes";
 import SkyClouds from "./SkyClouds";
 import { useThemeColors } from "./useThemeColors";
+import type { View } from "../views";
 
 // 기본 카메라 배치. 노드로 날아갔다가 여기로 되돌아온다.
 const HOME_POS: [number, number, number] = [0, 2.6, 11];
-
 const HOME_TARGET: [number, number, number] = [0, 0.2, 0];
 
+type Place = { x: number; y: number; scale: number };
+
 /**
- * 넓은 화면에서는 섬을 오른쪽으로 밀고 조금 줄인다. 왼쪽은 이름과 소개 텍스트
- * 자리다. 카메라 타깃을 옮기는 방법도 있지만, CameraControls 가 마운트 시점에
- * 준비돼 있지 않으면 setLookAt 이 조용히 무시돼 구도가 어긋난다.
- * 씬을 직접 옮기는 편이 결정적이다.
+ * 섬이 놓이는 자리.
+ *
+ * 홈에서는 크게 자리를 차지하고, 섹션을 볼 때는 작아져 구석으로 물러난다.
+ * 좁은 화면은 좌우로 나눌 폭이 없어 위아래로 나눈다.
  */
-const layout = (narrow: boolean) =>
-  narrow
-    ? // 좁은 화면은 좌우로 나눌 폭이 없다. 섬을 위로 올려 위아래로 나눈다.
-      { x: 0, y: 2.45, scale: 0.46 }
-    : { x: 3.3, y: 0, scale: 0.78 };
+function placement(narrow: boolean, view: View): Place {
+  if (view === "home") {
+    return narrow
+      ? { x: 0, y: 2.45, scale: 0.46 }
+      : { x: 3.3, y: 0, scale: 0.78 };
+  }
+  return narrow
+    ? { x: 1.9, y: -3.5, scale: 0.24 }
+    : { x: 5.4, y: -2.8, scale: 0.32 };
+}
 
 /** 섬 전체를 아주 느리게 돌린다 — 한 바퀴에 약 70초. */
 function SlowSpin({
@@ -47,13 +54,51 @@ function SlowSpin({
   return <group ref={ref}>{children}</group>;
 }
 
+/**
+ * 목표 자리로 부드럽게 옮겨간다.
+ *
+ * 화면을 전환할 때 섬이 툭 순간이동하면 같은 섬이라는 느낌이 끊긴다.
+ * 프레임마다 목표를 향해 일정 비율로 다가가되, 그 비율을 delta 기반으로
+ * 계산해 프레임률이 달라져도 속도가 같게 한다.
+ */
+function Placed({
+  place,
+  animate,
+  children,
+}: {
+  place: Place;
+  animate: boolean;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    const g = ref.current;
+    if (!g) return;
+    if (!animate) {
+      g.position.set(place.x, place.y, 0);
+      g.scale.setScalar(place.scale);
+      return;
+    }
+    const k = 1 - Math.pow(0.006, delta);
+    g.position.x += (place.x - g.position.x) * k;
+    g.position.y += (place.y - g.position.y) * k;
+    const s = g.scale.x + (place.scale - g.scale.x) * k;
+    g.scale.setScalar(s);
+  });
+
+  return <group ref={ref}>{children}</group>;
+}
+
 export default function Scene({
   onNavigate,
   active,
+  view,
 }: {
-  onNavigate: (id: string) => void;
-  /** 히어로가 화면 밖이거나 탭이 숨겨지면 false — 렌더 루프를 멈춘다. */
+  onNavigate: (id: View) => void;
+  /** 탭이 숨겨지면 false — 렌더 루프를 멈춘다. */
   active: boolean;
+  view: View;
 }) {
   const colors = useThemeColors();
   const controls = useRef<React.ComponentRef<typeof CameraControls>>(null);
@@ -64,43 +109,40 @@ export default function Scene({
   const [canDrag, setCanDrag] = useState(false);
   const [dpr, setDpr] = useState<[number, number]>([1, 2]);
   const [narrow, setNarrow] = useState(false);
-  const place = layout(narrow);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const narrow = window.matchMedia("(max-width: 767px)");
+    const isNarrow = window.matchMedia("(max-width: 767px)");
 
     const sync = () => {
       setAnimate(!reduced.matches);
-      setDetail(narrow.matches ? "low" : "high");
-      setNarrow(narrow.matches);
+      setDetail(isNarrow.matches ? "low" : "high");
+      setNarrow(isNarrow.matches);
       // 터치 기기에서 드래그 회전을 켜면 페이지 스크롤을 가로챈다.
       setCanDrag(fine.matches);
-      setDpr(narrow.matches ? [1, 1.5] : [1, 2]);
+      setDpr(isNarrow.matches ? [1, 1.5] : [1, 2]);
     };
 
     sync();
     reduced.addEventListener("change", sync);
     fine.addEventListener("change", sync);
-    narrow.addEventListener("change", sync);
+    isNarrow.addEventListener("change", sync);
     return () => {
       reduced.removeEventListener("change", sync);
       fine.removeEventListener("change", sync);
-      narrow.removeEventListener("change", sync);
+      isNarrow.removeEventListener("change", sync);
       if (returnTimer.current) clearTimeout(returnTimer.current);
     };
   }, []);
 
-  // 브레이크포인트가 바뀌면 구도를 다시 잡는다.
   /**
    * 노드 클릭 — 카메라가 그쪽으로 훅 다가갔다가 제자리로 돌아오고,
-   * 그와 동시에 페이지가 해당 섹션으로 스크롤한다.
-   * 카메라를 다 기다렸다 스크롤하면 굼뜨게 느껴진다.
+   * 그와 동시에 화면이 해당 섹션으로 바뀐다.
    */
   const handleSelect = useCallback(
     (node: SectionNode, world: THREE.Vector3) => {
-      onNavigate(node.id);
+      onNavigate(node.id as View);
 
       if (!animate) return; // 동작 줄이기: 카메라는 가만히 둔다
       const c = controls.current;
@@ -113,19 +155,21 @@ export default function Scene({
       if (returnTimer.current) clearTimeout(returnTimer.current);
       returnTimer.current = setTimeout(() => {
         c.setLookAt(...HOME_POS, ...HOME_TARGET, true);
-      }, 1400);
+      }, 1200);
     },
     [animate, onNavigate],
   );
 
+  const place = placement(narrow, view);
+  const home = view === "home";
+
   return (
     <Canvas
-      // 스크롤해서 Work 를 읽는 동안 GPU 가 계속 돌 이유가 없다.
       frameloop={active ? "always" : "never"}
       dpr={dpr}
       camera={{ position: HOME_POS, fov: 42 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      // 캔버스는 장식이다. 내비게이션은 캔버스 밖의 실제 링크가 맡는다.
+      // 캔버스는 장식이다. 내비게이션은 상단 바가 맡는다.
       aria-hidden="true"
       style={{ touchAction: "pan-y" }}
     >
@@ -144,7 +188,7 @@ export default function Scene({
       {/* 멀리 있는 것일수록 하늘색에 잠기게 — 씬이 배경에 앉는다 */}
       <fog attach="fog" args={[colors.canvas, 14, 34]} />
 
-      <group position={[place.x, place.y, 0]} scale={place.scale}>
+      <Placed place={place} animate={animate}>
         <Float
           speed={animate ? 1.1 : 0}
           rotationIntensity={animate ? 0.12 : 0}
@@ -156,14 +200,19 @@ export default function Scene({
           </SlowSpin>
         </Float>
 
-        <OrbitNodes colors={colors} animate={animate} onSelect={handleSelect} />
-      </group>
+        <OrbitNodes
+          colors={colors}
+          animate={animate}
+          showLabels={home}
+          onSelect={handleSelect}
+        />
+      </Placed>
 
       <SkyClouds colors={colors} detail={detail} animate={animate} />
 
       <CameraControls
         ref={controls}
-        enabled={canDrag}
+        enabled={canDrag && home}
         // 확대·이동은 막는다. 구도가 깨지면 씬이 아니라 뷰어가 된다.
         dollySpeed={0}
         truckSpeed={0}

@@ -36,7 +36,11 @@ export default function ScrollDriver() {
         max > 0 ? String(Math.min(1, Math.max(0, window.scrollY / max))) : "0",
       );
 
-      journey ??= document.getElementById("journey");
+      // 화면을 전환하면 #journey 가 통째로 다시 마운트된다.
+      // 끊어진 참조를 붙들고 있으면 나무가 자라지 않는다.
+      if (!journey || !journey.isConnected) {
+        journey = document.getElementById("journey");
+      }
       if (journey) {
         const rect = journey.getBoundingClientRect();
         // 섹션 상단이 뷰포트 85% 지점에 닿을 때 0,
@@ -61,8 +65,15 @@ export default function ScrollDriver() {
     window.addEventListener("resize", onResize, { passive: true });
     document.fonts?.ready.then(onResize).catch(() => {});
 
+    // 화면을 전환하면 본문이 통째로 바뀐다. 스크롤은 일어나지 않으므로
+    // 이것만으로는 다시 계산할 계기가 없다 — 나무가 자라지 않은 채로 멎는다.
+    // 문서 크기 변화를 보고 있으면 전환·폰트 로드·내용 변경이 모두 잡힌다.
+    const ro = new ResizeObserver(onResize);
+    ro.observe(document.body);
+
     return () => {
       if (frame) cancelAnimationFrame(frame);
+      ro.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };

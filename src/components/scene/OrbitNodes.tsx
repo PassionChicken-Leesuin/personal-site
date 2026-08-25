@@ -39,11 +39,14 @@ function Node({
   node,
   colors,
   animate,
+  showLabel,
   onSelect,
 }: {
   node: SectionNode;
   colors: SceneColors;
   animate: boolean;
+  /** 섬이 구석으로 작아진 화면에서는 라벨이 어지럽다. */
+  showLabel: boolean;
   onSelect: (node: SectionNode, world: THREE.Vector3) => void;
 }) {
   const ref = useRef<THREE.Group>(null);
@@ -96,6 +99,7 @@ function Node({
 
       {/* 라벨은 편의용 표시다. 진짜 내비게이션은 캔버스 밖의 <a> 링크가 맡는다. */}
       {/* pointerEvents none — 라벨이 클릭을 가로채면 노드를 누를 수 없다. */}
+      {showLabel && (
       <Html
         center
         distanceFactor={9}
@@ -107,6 +111,7 @@ function Node({
           {node.label}
         </span>
       </Html>
+      )}
     </group>
   );
 }
@@ -114,10 +119,12 @@ function Node({
 export default function OrbitNodes({
   colors,
   animate,
+  showLabels,
   onSelect,
 }: {
   colors: SceneColors;
   animate: boolean;
+  showLabels: boolean;
   onSelect: (node: SectionNode, world: THREE.Vector3) => void;
 }) {
   return (
@@ -128,6 +135,7 @@ export default function OrbitNodes({
           node={n}
           colors={colors}
           animate={animate}
+          showLabel={showLabels}
           onSelect={onSelect}
         />
       ))}
