@@ -254,28 +254,90 @@ export const social: Activity[] = [
 export type Lecture = {
   org: string;
   title: string;
+  /** 메인강사 / 보조강사 / 기술 멘토 — 맡은 자리가 다르면 다르게 적는다 */
+  role: string;
 };
 
-/** 출강 이력. 출처: [스코프랩스] 강사 프로필. */
+/** 출강 이력. 스코프랩스 강사로 진행한 기업 교육. */
 export const teaching: Lecture[] = [
-  { org: "NH투자증권", title: "생성형 AI를 활용한 업무 생산성 강화" },
   {
     org: "NH투자증권",
-    title: "생성형 AI를 활용한 증권 데이터 분석 및 인사이트 도출",
+    title: "생성형 AI를 활용한 업무 생산성 강화",
+    role: "보조강사",
   },
-  { org: "삼성물산", title: "사내보고서 기반 AI Agent 개발 멘토링" },
-  { org: "삼성물산", title: "안전뉴스 크롤링 및 요약 AI Agent 개발 멘토링" },
-  { org: "SK플라즈마", title: "임원 대상 AI 활용 교육" },
-  { org: "GST", title: "리더를 위한 생성형 AI 활용 업무 효율화" },
-  { org: "한국지역난방공사", title: "현장 실무자를 위한 AI 활용 교육" },
-  { org: "한국과학기술대학", title: "비즈니스 파워포인트 AI 활용 실무" },
+  {
+    org: "NH투자증권",
+    title: "생성형 AI를 활용한 증권 데이터분석 및 인사이트 도출",
+    role: "보조강사",
+  },
+  {
+    org: "한국지역난방공사",
+    title: "현장 실무자를 위한 AI 활용 교육",
+    role: "보조강사",
+  },
+  {
+    org: "SK플라즈마",
+    title: "임원 대상 AI 활용 교육",
+    role: "보조강사",
+  },
+  {
+    org: "삼성물산",
+    title: "사내보고서 기반 AI Agent 개발",
+    role: "메인강사",
+  },
+  {
+    org: "삼성물산",
+    title: "안전뉴스 크롤링 및 요약 AI Agent 개발",
+    role: "메인강사",
+  },
+  {
+    org: "삼성전자",
+    title: "LangChain과 LangGraph를 활용한 AI Agent 개발",
+    role: "보조강사",
+  },
+  {
+    org: "아주그룹",
+    title: "사내 Agentic AI 개발 해커톤",
+    role: "기술 멘토",
+  },
 ];
 
 /**
- * 출강한 기관 이름. Teaching 화면의 3D 위를 떠다닌다.
- * teaching 에서 중복을 걷어내 만든다 — 목록을 두 벌 두면 반드시 어긋난다.
+ * 기관 로고.
+ *
+ * 파일명을 ASCII 로 두는 이유: macOS 는 한글 파일명을 NFD(분해형)로 저장하는데
+ * 배포되는 Linux 는 NFC 를 기대한다. 한글 파일명 그대로 올리면 로컬에서는
+ * 보이고 배포에서만 404 가 난다.
  */
-export const teachingOrgs: string[] = [...new Set(teaching.map((l) => l.org))];
+const LOGOS: Record<string, string> = {
+  NH투자증권: "/logos/nh.svg",
+  한국지역난방공사: "/logos/kdhc.svg",
+  SK플라즈마: "/logos/sk-plasma.svg",
+  삼성물산: "/logos/samsung.svg",
+  삼성전자: "/logos/samsung.svg",
+  아주그룹: "/logos/aju.svg",
+};
+
+export type Org = { name: string; logo?: string };
+
+/**
+ * 출강한 기관. Teaching 화면의 3D 위를 떠다닌다.
+ * teaching 에서 중복을 걷어 만든다 — 목록을 두 벌 두면 반드시 어긋난다.
+ */
+export const teachingOrgs: Org[] = [
+  ...new Set(teaching.map((l) => l.org)),
+].map((name) => ({ name, logo: LOGOS[name] }));
+
+/**
+ * Teaching 화면에서 떠다니는 표식.
+ *
+ * 로고가 같은 기관은 하나로 묶는다 — 삼성물산과 삼성전자는 같은 로고를 쓰므로
+ * 그대로 두면 똑같은 마크가 둘 떠다녀 오류처럼 보인다.
+ */
+export const teachingMarks: Org[] = teachingOrgs.filter(
+  (o, i, all) =>
+    all.findIndex((x) => (x.logo ?? x.name) === (o.logo ?? o.name)) === i,
+);
 
 export const links = [
   { label: "Email", href: "mailto:leesuin9209@gmail.com" },

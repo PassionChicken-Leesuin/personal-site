@@ -197,6 +197,28 @@ body {
   }
 }
 
+/**
+ * Teaching 화면의 스크림.
+ *
+ * 다른 섹션은 왼쪽을 두껍게 덮고 오른쪽 끝만 틔워 두는데, 이 화면에는 좌우
+ * 여백을 오가는 기관 로고가 있다. 로고는 캔버스 안(z-index 1)에서 그려지고
+ * 스크림은 그 위(z-index 2)라, 88% 로 덮으면 그냥 지워진다.
+ *
+ * 그래서 좌우 대칭으로 바꾼다 — 글이 앉는 가운데 열만 두껍게 덮고 양쪽
+ * 여백은 틔운다. 로고는 어차피 가운데로 오면 스스로 옅어진다.
+ */
+@media (min-width: 640px) {
+  .scene-scrim[data-view="teaching"] {
+    background: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--canvas) 30%, transparent) 0%,
+      color-mix(in oklab, var(--canvas) 88%, transparent) 22%,
+      color-mix(in oklab, var(--canvas) 88%, transparent) 78%,
+      color-mix(in oklab, var(--canvas) 30%, transparent) 100%
+    );
+  }
+}
+
 /* 게이트에서는 도형이 글자 뒤 정중앙에 있다. 고르게 아주 옅게만 덮는다.
    좁은 화면은 도형과 글자가 같은 폭을 두고 다투므로 더 눌러 준다. */
 .scene-scrim[data-view="hello"] {
@@ -418,4 +440,22 @@ body {
   user-select: none;
   /* 궤도가 카메라 뒤로 돌아갈 때 툭 끊기지 않도록 */
   transition: opacity 500ms ease;
+}
+
+/* 로고는 잉크 한 색 실루엣으로 미리 변환해 둔 것이다(logos-source 가 원본).
+   다크모드에서는 뒤집어 흰 실루엣이 된다. */
+.wordmark-logo {
+  display: block;
+  height: 34px;
+  width: auto;
+  /* Tailwind preflight 의 img{max-width:100%} 를 무른다.
+     drei 의 Html 은 폭이 0 인 절대배치 div 안에 넣어 주므로, 100% 가 0 으로
+     풀려 이미지 폭이 0 이 된다 — 높이만 잡히고 화면에는 아무것도 안 나온다. */
+  max-width: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .wordmark-logo {
+    filter: invert(1);
+  }
 }

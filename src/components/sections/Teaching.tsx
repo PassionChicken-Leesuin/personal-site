@@ -16,8 +16,11 @@ export default function Teaching() {
           <li key={lecture.org + lecture.title}>
             <Reveal delay={Math.min(i, 6) * 50}>
               <div className="flex flex-col gap-2 border-t border-hairline-soft py-6 sm:flex-row sm:gap-10">
-                <div className="w-28 shrink-0 pt-0.5">
+                {/* 기관과 역할. 보조강사와 메인강사는 한 일이 다르므로
+                    같은 줄에 뭉뚱그리지 않는다. */}
+                <div className="flex w-28 shrink-0 flex-col gap-1.5 pt-0.5">
                   <span className="label">{lecture.org}</span>
+                  <span className="label">{lecture.role}</span>
                 </div>
 
                 <div className="min-w-0">

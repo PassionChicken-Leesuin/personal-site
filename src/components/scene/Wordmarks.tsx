@@ -4,7 +4,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
-import { teachingOrgs } from "@/content";
+import { teachingMarks, type Org } from "@/content";
 
 /**
  * 출강한 기관 이름이 Teaching 화면의 배경을 천천히 돈다.
@@ -41,7 +41,7 @@ function Mark({
   orbit,
   animate,
 }: {
-  org: string;
+  org: Org;
   orbit: Orbit;
   animate: boolean;
 }) {
@@ -75,14 +75,18 @@ function Mark({
       return;
     }
 
-    // 본문은 화면 가운데 열을 쓴다. 이름이 그 위를 지나가면 글자와 섞여
-    // 둘 다 읽기 어려워지므로, 가운데로 들어올수록 지워지게 한다 —
-    // 결과적으로 이름들이 본문을 '돌아서' 지나간다.
+    // 본문은 화면 가운데 열을 쓴다. 표식이 그 위를 지나가면 글자와 섞이므로
+    // 가운데로 들어올수록 옅어지게 한다 — 결과적으로 본문을 '돌아서' 지나간다.
+    //
+    // 가운데에서 0 으로 완전히 지우지는 않는다. 1440 폭에서 본문이 768 을 쓰면
+    // 남는 여백이 양쪽 336 뿐이라, 완전히 지우면 다섯 개가 동시에 사라지는
+    // 순간이 생긴다. 아주 옅게 남겨 두면 글 뒤로 지나가는 깊이가 된다.
     const edge = Math.abs(probe.x);
-    const clear = THREE.MathUtils.smoothstep(edge, 0.46, 0.74);
+    const clear = 0.18 + 0.82 * THREE.MathUtils.smoothstep(edge, 0.4, 0.66);
 
-    // 우상단 내비 상자 뒤도 비운다. 상자는 항목 수만큼 아래로 자란다.
-    const underNav = probe.x > 0.7 && probe.y > 0.38 ? 0 : 1;
+    // 우상단 내비 상자 뒤는 완전히 비운다. 반투명 상자 위로 로고가 겹치면
+    // 깊이가 아니라 고장으로 보인다.
+    const underNav = probe.x > 0.76 && probe.y > 0.42 ? 0 : 1;
 
     // 화면 밖으로 나가면 완전히 지운다
     const inside = edge > 1.05 ? 0 : 1;
@@ -99,8 +103,16 @@ function Mark({
         prepend
         style={{ pointerEvents: "none" }}
       >
+        {/* 로고가 있으면 로고, 없으면 이름. 투명도는 바깥 span 이 쥐고
+            다크모드 반전은 안쪽 img 가 받는다 — 둘을 한 엘리먼트에 얹으면
+            매 프레임 쓰는 opacity 가 filter 와 엉킨다. */}
         <span ref={el} className="wordmark" aria-hidden="true">
-          {org}
+          {org.logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="wordmark-logo" src={org.logo} alt="" />
+          ) : (
+            org.name
+          )}
         </span>
       </Html>
     </group>
@@ -110,8 +122,13 @@ function Mark({
 export default function Wordmarks({ animate }: { animate: boolean }) {
   return (
     <group>
-      {teachingOrgs.map((org, i) => (
-        <Mark key={org} org={org} orbit={ORBITS[i % ORBITS.length]} animate={animate} />
+      {teachingMarks.map((org, i) => (
+        <Mark
+          key={org.name}
+          org={org}
+          orbit={ORBITS[i % ORBITS.length]}
+          animate={animate}
+        />
       ))}
     </group>
   );
