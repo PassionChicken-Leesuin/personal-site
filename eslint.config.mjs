@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 서드파티 스킬(ui-ux-pro-max) — 우리 소스가 아니다
+    ".claude/**",
+    ".factory/**",
   ]),
 ]);
 

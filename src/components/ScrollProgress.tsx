@@ -1,41 +1,16 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
+/**
+ * 상단 진행 바. 서버 컴포넌트 — 자체 스크롤 리스너가 없다.
+ * ScrollDriver 가 :root 에 쓰는 --scroll 을 CSS 가 직접 읽어 scaleX 로 쓴다.
+ */
 export default function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-
-    const update = () => {
-      frame = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
-    };
-
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
   return (
-    <div
-      aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-px bg-transparent"
-    >
+    <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-px">
       <div
-        className="h-full origin-left bg-accent"
-        style={{ transform: `scaleX(${progress})` }}
+        className="h-full origin-left"
+        style={{
+          transform: "scaleX(var(--scroll))",
+          background: "var(--bark)",
+        }}
       />
     </div>
   );

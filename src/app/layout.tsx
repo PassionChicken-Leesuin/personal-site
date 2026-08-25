@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { Archivo, Space_Grotesk } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content";
+import ScrollDriver from "@/components/ScrollDriver";
+import MistLayers from "@/components/MistLayers";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+// Claude DESIGN.md 의 Copernicus / StyreneB 는 유료 서체라 대체한다.
+// Fraunces: SOFT·WONK 축이 있어 유기적인 인상을 만든다 (구름·나무 컨셉)
+// Inter:    원본 DESIGN.md 가 스스로 명시한 fallback
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["SOFT", "WONK"],
+  display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,9 +43,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ko"
-      className={`${archivo.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ScrollDriver />
+        <MistLayers />
+        {children}
+      </body>
     </html>
   );
 }
