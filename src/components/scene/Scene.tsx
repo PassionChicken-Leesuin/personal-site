@@ -41,9 +41,11 @@ function placement(narrow: boolean, stage: Stage): Place {
       ? { x: 0, y: 2.45, scale: 0.4 }
       : { x: 4.0, y: -0.5, scale: 0.74 };
   }
+  // 섹션마다 형태가 달라지므로 너무 작으면 그 차이가 안 보인다. 본문 열
+  // 오른쪽 끝(월드 x 3.6 언저리)을 넘지 않는 선에서 최대한 키운다.
   return narrow
-    ? { x: 1.9, y: -3.5, scale: 0.24 }
-    : { x: 5.4, y: -2.8, scale: 0.32 };
+    ? { x: 1.7, y: -3.4, scale: 0.32 }
+    : { x: 5.8, y: -1.9, scale: 0.5 };
 }
 
 /**
@@ -97,7 +99,6 @@ export default function Scene({
   const returnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [animate, setAnimate] = useState(true);
-  const [detail, setDetail] = useState<"low" | "high">("high");
   const [canDrag, setCanDrag] = useState(false);
   const [dpr, setDpr] = useState<[number, number]>([1, 2]);
   const [narrow, setNarrow] = useState(false);
@@ -109,7 +110,6 @@ export default function Scene({
 
     const sync = () => {
       setAnimate(!reduced.matches);
-      setDetail(isNarrow.matches ? "low" : "high");
       setNarrow(isNarrow.matches);
       // 터치 기기에서 드래그 회전을 켜면 페이지 스크롤을 가로챈다.
       setCanDrag(fine.matches);
@@ -166,10 +166,8 @@ export default function Scene({
       aria-hidden="true"
       style={{ touchAction: "pan-y" }}
     >
-      <PerformanceMonitor
-        onDecline={() => setDetail("low")}
-        onIncline={() => setDetail("high")}
-      />
+      {/* 성능 신호만 갱신한다. 아래 AdaptiveDpr 가 그 값을 읽어 해상도를 낮춘다. */}
+      <PerformanceMonitor />
       <AdaptiveDpr pixelated />
 
       {/* 조명이 하나도 없다 — 선으로만 그리므로 전부 unlit 이다.
@@ -182,7 +180,7 @@ export default function Scene({
           rotationIntensity={animate ? 0.1 : 0}
           floatIntensity={animate ? 0.45 : 0}
         >
-          <Structure colors={colors} animate={animate} detail={detail} />
+          <Structure colors={colors} animate={animate} stage={stage} />
         </Float>
 
         {/* 게이트에서는 누를 것이 HELLO 하나뿐이어야 한다 */}
