@@ -8,10 +8,11 @@ export const site = {
   nameKo: "이수인",
   role: "Industrial Engineering Researcher",
   tagline:
-    "서울대학교 산업공학과 석사과정. 에이전틱 AI와 기술지능, 지식재산 분석, " +
-    "산업 데이터 분석이 만나는 자리에서 연구합니다. 흩어져 있는 기술·운영·암묵적 " +
-    "지식을 의사결정에 쓸 수 있는 근거로 바꾸는 방법을 만듭니다. AI가 답을 내놓는 " +
-    "데서 그치지 않고 판단의 과정을 설명할 수 있게 하는 것, 그게 지금의 관심사입니다.",
+    "서울대학교 산업공학과 석사과정, DDSI Lab에서 연구합니다. 에이전틱 AI와 " +
+    "기술지능, 지식재산 분석, 산업 데이터 분석이 만나는 자리를 다룹니다. 흩어져 " +
+    "있는 기술·운영·암묵적 지식을 의사결정에 쓸 수 있는 근거로 바꾸는 방법을 " +
+    "만듭니다. AI가 답을 내놓는 데서 그치지 않고 판단의 과정을 설명할 수 있게 " +
+    "하는 것, 그게 지금의 관심사입니다.",
   email: "leesuin9209@gmail.com",
   location: "Seoul, Korea",
   url: "https://personal-site-brown-iota.vercel.app",
@@ -83,12 +84,6 @@ export const works: Work[] = [
       "COVID-19가 국내 섹터 ETF에 남긴 충격을 계량적으로 해부한 연구. Systems(SSCI) 게재, 공동 제1저자.",
   },
   {
-    title: "Identifying Emerging Technologies Using Big Data Analytics",
-    kind: "Award",
-    year: "2025",
-    description: "2025 캠퍼스 특허 유니버시아드 한국발명진흥회장상.",
-  },
-  {
     title: "Energy Storage System and Its Operating Method",
     kind: "Patent",
     year: "2023",
@@ -107,8 +102,8 @@ export const journey: Chapter[] = [
     period: "2026 —",
     title: "Seoul National University",
     body:
-      "산업공학과 석사과정. 에이전틱 AI와 기술지능, 지식재산 분석, 산업 데이터 분석을 " +
-      "잇는 주제를 다룹니다.",
+      "산업공학과 석사과정. Data-driven Service Innovation Lab(DDSI Lab)에서 " +
+      "에이전틱 AI와 기술지능, 지식재산 분석, 산업 데이터 분석을 잇는 주제를 연구합니다.",
   },
   {
     period: "2026 —",
@@ -139,6 +134,119 @@ export const journey: Chapter[] = [
     body:
       "산업경영공학과 학사. GPA 4.14/4.5, 130학점. 학과 학생회장과 AI/ML 연합동아리 " +
       "비타민 활동을 병행했습니다.",
+  },
+];
+
+export type Award = {
+  title: string;
+  detail: string;
+  year: string;
+  /** Award / Scholarship — 왼쪽 칸에 종류로 찍힌다 */
+  kind: string;
+};
+
+export const awards: Award[] = [
+  {
+    title: "2025 캠퍼스 특허 유니버시아드",
+    detail: "한국발명진흥회장상. 빅데이터 분석을 이용한 유망 기술 발굴.",
+    year: "2025",
+    kind: "Award",
+  },
+  {
+    title: "AI 서비스 경진대회 (KVP)",
+    detail: "1위. 생성형 AI와 강화학습 기반 멘탈 헬스케어 서비스.",
+    year: "2025",
+    kind: "Award",
+  },
+  {
+    title: "성적우수 장학금 1등",
+    detail: "경희대학교 산업경영공학과.",
+    year: "2025",
+    kind: "Scholarship",
+  },
+  {
+    title: "NH투자증권 생성형 AI 기반 ETF 큐레이션 서비스 기획·개발 공모전",
+    detail: "4위.",
+    year: "2024",
+    kind: "Award",
+  },
+  {
+    title: "밝은사회 장학금",
+    detail: "경희대학교 공과대학. 학생회 활동 공로로 2024년 4월·10월 두 차례.",
+    year: "2024",
+    kind: "Scholarship",
+  },
+  {
+    title: "성적우수 장학금 2등",
+    detail: "경희대학교 산업경영공학과.",
+    year: "2024",
+    kind: "Scholarship",
+  },
+  {
+    title: "AI 서비스 경진대회 (KVP)",
+    detail: "1위. YOLOv5를 활용한 중고 도서 거래 플랫폼.",
+    year: "2024",
+    kind: "Award",
+  },
+  {
+    title: "성적우수 장학금 3등",
+    detail: "경희대학교 산업경영공학과.",
+    year: "2024",
+    kind: "Scholarship",
+  },
+  {
+    title: "KT 빅데이터 기반 소상공인 컨설팅 공모전",
+    detail: "우수상.",
+    year: "2023",
+    kind: "Award",
+  },
+  {
+    title: "경기 청년 갭이어 프로젝트",
+    detail: "공학 분야 우수사례. 데이터 기반 신규 작물 재배 제안.",
+    year: "2023",
+    kind: "Award",
+  },
+];
+
+export type Activity = {
+  period: string;
+  title: string;
+  role: string;
+  body: string;
+};
+
+export const social: Activity[] = [
+  {
+    period: "2025 — 2026",
+    title: "Bitamin",
+    role: "Member",
+    body:
+      "대학생 AI/ML 연합동아리. 매주 딥러닝·머신러닝 스터디를 이어갔고, RAG 프로젝트 " +
+      "둘을 포함해 네 건의 AI 프로젝트를 마쳤습니다. 학회 발표에도 참여했습니다.",
+  },
+  {
+    period: "2024",
+    title: "산업경영공학과 학생회",
+    role: "President",
+    body:
+      "현대제철과의 협업을 포함해 학과 행사 아홉 건을 기획하고 운영했습니다. 학과 " +
+      "이슈를 다루는 월간지를 발행했고, 특집으로 「산업공학 로드맵」을 실었습니다.",
+  },
+  {
+    period: "2020 — 2025",
+    title: "The Press Zone",
+    role: "Member · President 2023",
+    body:
+      "학술 발표 동아리. 국제 이슈를 조사해 발표 자료를 만들고 연간 대회에서 " +
+      "발표했습니다. 자료를 설계하고 사람 앞에서 말하는 법을 여기서 익혔습니다.",
+  },
+  {
+    period: "2020 — 2025",
+    title: "Halles · FL:ex · ADELEMI",
+    role: "Team Lead",
+    body:
+      "댄스팀 운영과 일정 조율을 맡았습니다. 서로 다른 사람들을 한 무대에 세우는 일이 " +
+      "곧 소통과 문제 해결이었습니다.",
   },
 ];
 

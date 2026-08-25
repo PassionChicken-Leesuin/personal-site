@@ -14,7 +14,9 @@ import TopNav from "./TopNav";
 import ScrollProgress from "./ScrollProgress";
 import Intro from "./sections/Intro";
 import Work from "./sections/Work";
+import Awards from "./sections/Awards";
 import Journey from "./sections/Journey";
+import Social from "./sections/Social";
 import Contact from "./sections/Contact";
 import { isView, type Stage, type View } from "./views";
 
@@ -173,7 +175,9 @@ export default function Site() {
           <div key={view} className="view-enter" data-home={view === "home"}>
             {view === "home" && <Intro />}
             {view === "work" && <Work />}
+            {view === "awards" && <Awards />}
             {view === "journey" && <Journey />}
+            {view === "social" && <Social />}
             {view === "contact" && <Contact />}
           </div>
         </main>

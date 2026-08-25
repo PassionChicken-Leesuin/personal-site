@@ -19,20 +19,36 @@ export type SectionNode = {
 export const NODES: SectionNode[] = [
   { id: "work", label: "Work", radius: 2.75, height: 1.9, speed: 0.16, phase: 0 },
   {
+    id: "awards",
+    label: "Awards",
+    radius: 3.0,
+    height: 0.6,
+    speed: 0.13,
+    phase: 1.3,
+  },
+  {
     id: "journey",
     label: "Journey",
     radius: 3.1,
     height: -0.5,
     speed: 0.11,
-    phase: 2.2,
+    phase: 2.5,
+  },
+  {
+    id: "social",
+    label: "Social",
+    radius: 2.6,
+    height: -1.7,
+    speed: 0.18,
+    phase: 3.8,
   },
   {
     id: "contact",
     label: "Contact",
     radius: 2.5,
-    height: 2.9,
+    height: 2.45,
     speed: 0.2,
-    phase: 4.3,
+    phase: 5.1,
   },
 ];
 

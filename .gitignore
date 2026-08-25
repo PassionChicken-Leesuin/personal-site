@@ -43,3 +43,6 @@ next-env.d.ts
 # UI/UX skill (로컬 도구, 배포와 무관)
 .claude/
 .factory/
+
+# 개인 프로필 원본 (GPA·장학·어학점수 포함 — 공개 저장소에 올리지 않는다)
+/Suin_Lee_Master_Profile_*.md

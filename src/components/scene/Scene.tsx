@@ -37,8 +37,8 @@ function placement(narrow: boolean, stage: Stage): Place {
     // 도형이 흩어져 있어 폭을 넓게 쓴다. 본문 오른쪽 끝보다 더 밀어야
     // 선이 문단 위를 가로지르지 않는다.
     return narrow
-      ? { x: 0, y: 2.6, scale: 0.42 }
-      : { x: 4.0, y: 0, scale: 0.74 };
+      ? { x: 0, y: 2.45, scale: 0.4 }
+      : { x: 4.0, y: -0.5, scale: 0.74 };
   }
   return narrow
     ? { x: 1.9, y: -3.5, scale: 0.24 }

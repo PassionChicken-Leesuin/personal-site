@@ -6,7 +6,7 @@ export default function Contact() {
   return (
     <section id="contact">
       <Reveal>
-        <SectionHead index="03 / 03">Contact</SectionHead>
+        <SectionHead index="05 / 05">Contact</SectionHead>
       </Reveal>
 
       <Reveal delay={80}>
