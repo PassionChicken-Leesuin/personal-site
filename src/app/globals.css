@@ -7,51 +7,57 @@
      테라코타 = 나무껍질 / 청록 = 잎사귀 / 앰버 = 잎 사이 빛
    ───────────────────────────────────────────────────────────── */
 :root {
-  --canvas: #faf9f5;
-  --surface-soft: #f5f0e8;
-  --surface-card: #efe9de;
-  --hairline: #e6dfd8;
-  --hairline-soft: #ebe6df;
+  --canvas: #e4eef7;
+  --surface-soft: #d5e6f3;
+  --surface-card: #ffffff;
+  --hairline: #c8dcea;
+  --hairline-soft: #d8e7f2;
 
-  --ink: #141413;
-  --body: #3d3d3a;
-  --muted: #6c6a64;
+  --ink: #0f1720;
+  --body: #33414d;
+  --muted: #445766;
 
-  --bark: #cc785c;
-  --bark-deep: #a9583e; /* 본문 크기 링크용 — 크림 위 4.9:1 */
-  --leaf: #5db8a6;
+  --bark: #b06a4e;
+  --bark-deep: #7d4530; /* 가장 진한 하늘 위 5.1:1 */
+  --leaf: #4f9e73;
   --light: #e8a55a;
 
-  /* 안개층 색 — 컨셉의 "구름".
-     액센트색을 그대로 쓰면 흔한 "AI 스포트라이트 글로우"로 읽힌다.
-     채도를 낮춘 대기색으로 두어 빛이 아니라 공기처럼 보이게 한다. */
-  --mist-1: rgba(219, 206, 186, 0.5);
-  --mist-2: rgba(235, 202, 156, 0.3);
-  --mist-3: rgba(176, 194, 176, 0.15);
+  /* 구름 — 파란 하늘 위의 흰 구름.
+     아래층으로 갈수록 그늘진 쪽이라 살짝 푸르다. */
+  --sky-top: rgba(174, 209, 236, 0.75);
+  --ground: rgba(224, 212, 190, 0.42);
+
+  --mist-1: rgba(255, 255, 255, 0.92);
+  --mist-2: rgba(255, 255, 255, 0.7);
+  --mist-3: rgba(255, 255, 255, 0.5);
 
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #181715;
-    --surface-soft: #1f1e1b;
-    --surface-card: #252320;
-    --hairline: #2e2c28;
-    --hairline-soft: #26241f;
+    --canvas: #0d1520;
+    --surface-soft: #131d2a;
+    --surface-card: #182333;
+    --hairline: #24303f;
+    --hairline-soft: #1d2836;
 
-    --ink: #faf9f5;
-    --body: #e5e2db;
-    --muted: #a09d96;
+    --ink: #eef4f9;
+    --body: #cbd8e3;
+    --muted: #8fa3b5;
 
-    --bark: #d98e73;
-    --bark-deep: #d98e73; /* 어두운 바탕 위 6.8:1 */
-    --leaf: #6fc9b7;
+    --bark: #c9825f;
+    --bark-deep: #d99570;
+    --leaf: #6bbd91;
     --light: #edb679;
 
-    --mist-1: rgba(78, 73, 63, 0.45);
-    --mist-2: rgba(94, 76, 52, 0.34);
-    --mist-3: rgba(56, 74, 58, 0.3);
+    /* 밤하늘의 구름 */
+    --sky-top: rgba(28, 46, 70, 0.7);
+    --ground: rgba(48, 42, 34, 0.45);
+
+    --mist-1: rgba(64, 86, 112, 0.6);
+    --mist-2: rgba(48, 66, 88, 0.45);
+    --mist-3: rgba(38, 56, 78, 0.5);
 
     color-scheme: dark;
   }
@@ -89,17 +95,20 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  /* 뿌리로 내려갈수록 바탕이 아주 살짝 따뜻해진다.
-     잉크는 고정이라 전 구간에서 대비가 유지된다. */
+  min-height: 100%;
+  /* 위는 하늘, 아래는 땅. 스크롤해 내려갈수록 지면에 가까워진다.
+     body 에 걸면 캔버스로 전파되면서 뷰포트 높이마다 반복된다. */
   background-color: var(--canvas);
   background-image: linear-gradient(
     to bottom,
-    transparent 0%,
-    color-mix(in oklab, var(--surface-soft) 40%, transparent) 100%
+    var(--sky-top) 0%,
+    transparent 40%,
+    var(--ground) 100%
   );
+  background-repeat: no-repeat;
+}
+
+body {
   color: var(--body);
   /* 한글은 웹폰트를 얹지 않는다 — 한글 웹폰트는 수백 KB라 이 정적 사이트의
      이점을 깎는다. 시스템 스택으로 충분히 좋게 나온다. */
