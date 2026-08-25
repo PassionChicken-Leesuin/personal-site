@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# UI/UX skill (로컬 도구, 배포와 무관)
+.claude/
+.factory/

@@ -1,69 +1,168 @@
-import Image from "next/image";
+import Reveal from "@/components/Reveal";
+import ScrollProgress from "@/components/ScrollProgress";
+import { site, works, journey, links } from "@/content";
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-display text-xs uppercase tracking-[0.28em] text-muted">
+      {children}
+    </p>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <>
+      <ScrollProgress />
+
+      <main className="mx-auto w-full max-w-3xl px-6 sm:px-8">
+        {/* ── Intro ───────────────────────────────────────── */}
+        <section className="flex min-h-svh flex-col justify-center py-24">
+          <Reveal>
+            <SectionLabel>{site.location}</SectionLabel>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h1 className="mt-6 font-display text-5xl font-medium leading-[1.05] tracking-tight sm:text-7xl">
+              {site.name}
+            </h1>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <p className="mt-3 font-display text-xl text-muted sm:text-2xl">
+              {site.nameKo} · {site.role}
+            </p>
+          </Reveal>
+
+          <Reveal delay={220}>
+            <p className="mt-10 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+              {site.tagline}
+            </p>
+          </Reveal>
+
+          <Reveal delay={320}>
+            <div className="mt-16 flex items-center gap-3 text-xs uppercase tracking-[0.28em] text-muted">
+              <span>scroll</span>
+              <span className="h-px w-12 bg-line" />
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ── Work ────────────────────────────────────────── */}
+        <section id="work" className="border-t border-line py-24 sm:py-32">
+          <Reveal>
+            <SectionLabel>Work</SectionLabel>
+          </Reveal>
+
+          <ul className="mt-12">
+            {works.map((work, i) => {
+              const inner = (
+                <div className="flex flex-col gap-2 border-t border-line py-8 transition-colors duration-200 group-hover:border-accent sm:flex-row sm:items-baseline sm:gap-8">
+                  <div className="flex w-28 shrink-0 items-baseline gap-3 font-display text-xs uppercase tracking-[0.18em] text-muted">
+                    <span>{work.year}</span>
+                    <span>{work.kind}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-display text-xl font-medium tracking-tight transition-colors duration-200 group-hover:text-accent sm:text-2xl">
+                      {work.title}
+                    </h2>
+                    <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
+                      {work.description}
+                    </p>
+                  </div>
+                </div>
+              );
+
+              return (
+                <li key={work.title + i}>
+                  <Reveal delay={i * 60}>
+                    {work.href ? (
+                      <a
+                        href={work.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group block cursor-pointer"
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div className="group">{inner}</div>
+                    )}
+                  </Reveal>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        {/* ── Journey ─────────────────────────────────────── */}
+        <section id="journey" className="border-t border-line py-24 sm:py-32">
+          <Reveal>
+            <SectionLabel>Journey</SectionLabel>
+          </Reveal>
+
+          <ol className="mt-12 space-y-14">
+            {journey.map((chapter, i) => (
+              <li key={chapter.period + i}>
+                <Reveal delay={i * 60}>
+                  <div className="sm:flex sm:gap-8">
+                    <p className="w-28 shrink-0 font-display text-xs uppercase tracking-[0.18em] text-muted">
+                      {chapter.period}
+                    </p>
+                    <div className="mt-2 min-w-0 sm:mt-0">
+                      <h2 className="font-display text-xl font-medium tracking-tight sm:text-2xl">
+                        {chapter.title}
+                      </h2>
+                      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
+                        {chapter.body}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* ── Contact ─────────────────────────────────────── */}
+        <section id="contact" className="border-t border-line py-24 sm:py-32">
+          <Reveal>
+            <SectionLabel>Contact</SectionLabel>
+          </Reveal>
+
+          <Reveal delay={80}>
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href={`mailto:${site.email}`}
+              className="mt-8 inline-block cursor-pointer font-display text-2xl font-medium tracking-tight underline decoration-line underline-offset-8 transition-colors duration-200 hover:text-accent hover:decoration-accent sm:text-4xl"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              {site.email}
+            </a>
+          </Reveal>
+
+          <Reveal delay={160}>
+            <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    className="cursor-pointer font-display text-xs uppercase tracking-[0.28em] text-muted transition-colors duration-200 hover:text-accent"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+
+        <footer className="border-t border-line py-10">
+          <p className="font-display text-xs uppercase tracking-[0.28em] text-muted">
+            {site.name} · {new Date().getFullYear()}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+        </footer>
       </main>
-    </div>
+    </>
   );
 }
