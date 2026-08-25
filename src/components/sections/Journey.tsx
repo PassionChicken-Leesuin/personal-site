@@ -6,7 +6,7 @@ export default function Journey() {
   return (
     <section id="journey">
       <Reveal>
-        <SectionHead index="03 / 05">Journey</SectionHead>
+        <SectionHead view="journey">Journey</SectionHead>
       </Reveal>
 
       {/* 세로 괘선 하나가 전 구간을 관통하고, 각 항목이 거기에 눈금으로 걸린다.

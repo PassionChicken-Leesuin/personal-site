@@ -74,7 +74,8 @@ export const works: Work[] = [
     kind: "Paper",
     year: "2026",
     description:
-      "텍스트 마이닝으로 기술 트렌드를 포착하는 분석 프레임워크. 한국혁신학회지(KCI) 게재, 제1저자.",
+      "기술의 친환경성을 함께 보는 텍스트 마이닝 기반 기술 트렌드 분석 프레임워크. " +
+      "글로벌 정유 기업의 특허 데이터를 대상으로 검증했습니다. 한국혁신학회지(KCI) 게재, 제1저자.",
   },
   {
     title: "Deciphering the Impact of COVID-19 on Korean Sector ETFs",
@@ -249,6 +250,32 @@ export const social: Activity[] = [
       "곧 소통과 문제 해결이었습니다.",
   },
 ];
+
+export type Lecture = {
+  org: string;
+  title: string;
+};
+
+/** 출강 이력. 출처: [스코프랩스] 강사 프로필. */
+export const teaching: Lecture[] = [
+  { org: "NH투자증권", title: "생성형 AI를 활용한 업무 생산성 강화" },
+  {
+    org: "NH투자증권",
+    title: "생성형 AI를 활용한 증권 데이터 분석 및 인사이트 도출",
+  },
+  { org: "삼성물산", title: "사내보고서 기반 AI Agent 개발 멘토링" },
+  { org: "삼성물산", title: "안전뉴스 크롤링 및 요약 AI Agent 개발 멘토링" },
+  { org: "SK플라즈마", title: "임원 대상 AI 활용 교육" },
+  { org: "GST", title: "리더를 위한 생성형 AI 활용 업무 효율화" },
+  { org: "한국지역난방공사", title: "현장 실무자를 위한 AI 활용 교육" },
+  { org: "한국과학기술대학", title: "비즈니스 파워포인트 AI 활용 실무" },
+];
+
+/**
+ * 출강한 기관 이름. Teaching 화면의 3D 위를 떠다닌다.
+ * teaching 에서 중복을 걷어내 만든다 — 목록을 두 벌 두면 반드시 어긋난다.
+ */
+export const teachingOrgs: string[] = [...new Set(teaching.map((l) => l.org))];
 
 export const links = [
   { label: "Email", href: "mailto:leesuin9209@gmail.com" },

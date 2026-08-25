@@ -15,6 +15,7 @@ import ScrollProgress from "./ScrollProgress";
 import Intro from "./sections/Intro";
 import Work from "./sections/Work";
 import Awards from "./sections/Awards";
+import Teaching from "./sections/Teaching";
 import Journey from "./sections/Journey";
 import Social from "./sections/Social";
 import Contact from "./sections/Contact";
@@ -176,6 +177,7 @@ export default function Site() {
             {view === "home" && <Intro />}
             {view === "work" && <Work />}
             {view === "awards" && <Awards />}
+            {view === "teaching" && <Teaching />}
             {view === "journey" && <Journey />}
             {view === "social" && <Social />}
             {view === "contact" && <Contact />}

@@ -34,12 +34,20 @@ export default function TopNav({
           <Mark className="h-6 w-6 sm:h-7 sm:w-7" />
         </button>
 
-        {/* 도면의 표제란 — 얇은 테두리 안에 항목을 쌓고 괘선으로 나눈다 */}
-        <ul className="pointer-events-auto border border-hairline bg-[color-mix(in_oklab,var(--canvas)_72%,transparent)] backdrop-blur-[2px]">
+        {/* 도면의 표제란 — 얇은 테두리 안에 항목을 쌓고 괘선으로 나눈다.
+            좁은 화면에서는 두 열로 접는다. 섹션이 여섯이 되면서 한 줄로
+            쌓으면 상자가 본문 첫 줄까지 내려와 덮었다. */}
+        <ul className="pointer-events-auto grid grid-cols-2 border border-hairline bg-[color-mix(in_oklab,var(--canvas)_72%,transparent)] backdrop-blur-[2px] sm:grid-cols-1">
           {items.map((key, i) => (
             <li
               key={key}
-              className={i > 0 ? "border-t border-hairline-soft" : undefined}
+              className={[
+                "border-hairline-soft",
+                i % 2 === 1 ? "border-l" : "",
+                i >= 2 ? "border-t" : "",
+                "sm:border-l-0",
+                i > 0 ? "sm:border-t" : "sm:border-t-0",
+              ].join(" ")}
             >
               <button
                 type="button"

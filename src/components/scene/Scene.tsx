@@ -11,6 +11,7 @@ import {
 import * as THREE from "three";
 import Structure from "./Structure";
 import OrbitNodes, { type SectionNode } from "./OrbitNodes";
+import Wordmarks from "./Wordmarks";
 import { useThemeColors } from "./useThemeColors";
 import type { Stage, View } from "../views";
 
@@ -194,6 +195,11 @@ export default function Scene({
           />
         )}
       </Placed>
+
+      {/* 출강 기관 이름 — Teaching 화면에서만. Placed 바깥에 두어 구석으로
+          물러난 작도와 달리 화면 전체를 쓴다. 좁은 화면에서는 글이 지면을
+          다 쓰므로 띄우지 않는다. */}
+      {stage === "teaching" && !narrow && <Wordmarks animate={animate} />}
 
       <CameraControls
         ref={controls}

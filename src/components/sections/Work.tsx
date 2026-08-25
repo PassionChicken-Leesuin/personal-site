@@ -7,7 +7,7 @@ export default function Work() {
   return (
     <section id="work">
       <Reveal>
-        <SectionHead index="01 / 05">Work</SectionHead>
+        <SectionHead view="work">Work</SectionHead>
       </Reveal>
 
       <ul className="mt-10">

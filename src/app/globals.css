@@ -302,7 +302,9 @@ body {
 }
 .view-enter {
   animation: view-in 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  padding-top: 7rem;
+  /* 상단 내비 상자 아래에서 시작한다. 상자는 항목 수만큼 자라므로
+     여유를 두되, 좁은 화면에서는 두 열로 접혀 덜 필요하다. */
+  padding-top: 8.5rem;
   /* main 은 클릭을 넘긴다. 실제 내용이 있는 여기서 다시 켠다. */
   pointer-events: auto;
 }
@@ -403,4 +405,17 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── 출강 기관 워드마크 (Teaching 화면의 3D 위) ────────────── */
+.wordmark {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  user-select: none;
+  /* 궤도가 카메라 뒤로 돌아갈 때 툭 끊기지 않도록 */
+  transition: opacity 500ms ease;
 }

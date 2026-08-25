@@ -6,7 +6,7 @@ export default function Awards() {
   return (
     <section id="awards">
       <Reveal>
-        <SectionHead index="02 / 05">Awards</SectionHead>
+        <SectionHead view="awards">Awards</SectionHead>
       </Reveal>
 
       {/* Work 과 같은 행 구조를 쓰되 제목을 한 급 낮춘다 — 수상 이력은

@@ -1,20 +1,24 @@
+import { sectionIndex, type Section } from "@/components/views";
+
 /**
  * 섹션 머리. 도면의 표제처럼 왼쪽에 이름, 오른쪽 끝에 번호,
  * 그 사이를 괘선이 메운다 — 빈칸을 선이 채우면 지면이 정돈돼 보인다.
+ *
+ * 번호는 받지 않고 VIEWS 순서에서 끌어온다. 섹션이 늘어도 손댈 곳이 없다.
  */
 export function SectionHead({
   children,
-  index,
+  view,
 }: {
   children: React.ReactNode;
-  index: string;
+  view: Section;
 }) {
   return (
     <div className="flex items-center gap-4">
       <p className="label shrink-0">{children}</p>
       <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
       <p className="label shrink-0" aria-hidden="true">
-        {index}
+        {sectionIndex(view)}
       </p>
     </div>
   );

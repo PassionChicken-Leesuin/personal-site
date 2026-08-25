@@ -6,7 +6,7 @@ export default function Social() {
   return (
     <section id="social">
       <Reveal>
-        <SectionHead index="04 / 05">Social</SectionHead>
+        <SectionHead view="social">Social</SectionHead>
       </Reveal>
 
       <ul className="mt-10">

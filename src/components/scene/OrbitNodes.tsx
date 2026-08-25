@@ -17,30 +17,38 @@ export type SectionNode = {
 };
 
 export const NODES: SectionNode[] = [
-  { id: "work", label: "Work", radius: 2.75, height: 1.9, speed: 0.16, phase: 0 },
+  { id: "work", label: "Work", radius: 2.75, height: 1.85, speed: 0.16, phase: 0 },
   {
     id: "awards",
     label: "Awards",
     radius: 3.0,
-    height: 0.6,
+    height: 0.75,
     speed: 0.13,
-    phase: 1.3,
+    phase: 1.05,
+  },
+  {
+    id: "teaching",
+    label: "Teaching",
+    radius: 2.65,
+    height: -0.35,
+    speed: 0.15,
+    phase: 2.1,
   },
   {
     id: "journey",
     label: "Journey",
     radius: 3.1,
-    height: -0.5,
+    height: -1.4,
     speed: 0.11,
-    phase: 2.5,
+    phase: 3.15,
   },
   {
     id: "social",
     label: "Social",
     radius: 2.6,
-    height: -1.7,
+    height: -2.3,
     speed: 0.18,
-    phase: 3.8,
+    phase: 4.2,
   },
   {
     id: "contact",
@@ -48,7 +56,7 @@ export const NODES: SectionNode[] = [
     radius: 2.5,
     height: 2.45,
     speed: 0.2,
-    phase: 5.1,
+    phase: 5.25,
   },
 ];
 
