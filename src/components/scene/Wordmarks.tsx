@@ -27,13 +27,13 @@ type Orbit = {
 
 // 반지름과 높이를 서로 다르게 줘 한 평면에 줄 서지 않게 한다.
 const ORBITS: Orbit[] = [
-  { radius: 5.4, height: 2.4, speed: 0.055, phase: 0.0, opacity: 0.68 },
-  { radius: 6.6, height: -1.1, speed: 0.041, phase: 1.05, opacity: 0.6 },
-  { radius: 4.8, height: 0.9, speed: 0.066, phase: 2.1, opacity: 0.72 },
-  { radius: 7.1, height: 2.9, speed: 0.035, phase: 3.15, opacity: 0.55 },
-  { radius: 5.9, height: -2.6, speed: 0.05, phase: 4.2, opacity: 0.64 },
-  { radius: 6.2, height: -0.2, speed: 0.045, phase: 5.25, opacity: 0.62 },
-  { radius: 4.4, height: 3.4, speed: 0.06, phase: 2.7, opacity: 0.68 },
+  { radius: 5.4, height: 2.4, speed: 0.055, phase: 0.0, opacity: 0.92 },
+  { radius: 6.6, height: -1.1, speed: 0.041, phase: 1.05, opacity: 0.84 },
+  { radius: 4.8, height: 0.9, speed: 0.066, phase: 2.1, opacity: 0.95 },
+  { radius: 7.1, height: 2.9, speed: 0.035, phase: 3.15, opacity: 0.8 },
+  { radius: 5.9, height: -2.6, speed: 0.05, phase: 4.2, opacity: 0.88 },
+  { radius: 6.2, height: -0.2, speed: 0.045, phase: 5.25, opacity: 0.86 },
+  { radius: 4.4, height: 3.4, speed: 0.06, phase: 2.7, opacity: 0.92 },
 ];
 
 function Mark({
@@ -82,7 +82,7 @@ function Mark({
     // 남는 여백이 양쪽 336 뿐이라, 완전히 지우면 다섯 개가 동시에 사라지는
     // 순간이 생긴다. 아주 옅게 남겨 두면 글 뒤로 지나가는 깊이가 된다.
     const edge = Math.abs(probe.x);
-    const clear = 0.18 + 0.82 * THREE.MathUtils.smoothstep(edge, 0.4, 0.66);
+    const clear = 0.16 + 0.84 * THREE.MathUtils.smoothstep(edge, 0.42, 0.56);
 
     // 우상단 내비 상자 뒤는 완전히 비운다. 반투명 상자 위로 로고가 겹치면
     // 깊이가 아니라 고장으로 보인다.

@@ -209,12 +209,16 @@ body {
  */
 @media (min-width: 640px) {
   .scene-scrim[data-view="teaching"] {
+    /* 본문 열(max-w-3xl 가운데 정렬)은 대략 26%~74% 를 쓴다. 그 구간만
+       두껍게 덮고 나머지는 거의 비운다 — 여백까지 덮으면 로고 색이 탁해진다. */
     background: linear-gradient(
       to right,
-      color-mix(in oklab, var(--canvas) 30%, transparent) 0%,
-      color-mix(in oklab, var(--canvas) 88%, transparent) 22%,
-      color-mix(in oklab, var(--canvas) 88%, transparent) 78%,
-      color-mix(in oklab, var(--canvas) 30%, transparent) 100%
+      color-mix(in oklab, var(--canvas) 12%, transparent) 0%,
+      color-mix(in oklab, var(--canvas) 16%, transparent) 20%,
+      color-mix(in oklab, var(--canvas) 88%, transparent) 27%,
+      color-mix(in oklab, var(--canvas) 88%, transparent) 73%,
+      color-mix(in oklab, var(--canvas) 16%, transparent) 80%,
+      color-mix(in oklab, var(--canvas) 12%, transparent) 100%
     );
   }
 }
@@ -446,7 +450,7 @@ body {
    다크모드에서는 뒤집어 흰 실루엣이 된다. */
 .wordmark-logo {
   display: block;
-  height: 34px;
+  height: 38px;
   width: auto;
   /* Tailwind preflight 의 img{max-width:100%} 를 무른다.
      drei 의 Html 은 폭이 0 인 절대배치 div 안에 넣어 주므로, 100% 가 0 으로
@@ -454,8 +458,18 @@ body {
   max-width: none;
 }
 
+/**
+ * 다크모드.
+ *
+ * 반전하면 색이 통째로 뒤집혀 브랜드가 아니게 된다. 대신 밝기를 올려
+ * 어두운 잉크가 검은 지면에서 떠오르게 한다 — 한국지역난방공사의 검은
+ * 로고타입, 삼성의 짙은 파랑이 그대로면 배경에 묻힌다.
+ *
+ * 흰 판을 깔아 해결하는 방법도 있지만, 검은 지면에 흰 사각형 다섯 개가
+ * 떠다니면 그게 화면의 주인공이 된다.
+ */
 @media (prefers-color-scheme: dark) {
   .wordmark-logo {
-    filter: invert(1);
+    filter: brightness(1.9) saturate(1.15);
   }
 }
